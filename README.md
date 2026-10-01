@@ -6,8 +6,9 @@ the course as a versioned, tested, tracked, containerized, monitored service wit
 retraining decision behind it. Every session removes one production risk from this
 repository.
 
-This is the **starter** commit. It holds only what session 1 needs. The rest arrives one
-session at a time.
+This is the **starter** commit. It holds only what session 1 needs: the baseline script, its
+data, and a small notebook-to-container walkthrough. The rest arrives one session at a
+time.
 
 ## How This Repository Works
 
@@ -57,8 +58,9 @@ git pull upstream main --tags
 ```
 
 Files under `sessions/`, `data/`, and `checks/` belong to the course; leave them unchanged.
-Student code goes in `src/`, `tests/`, and the configuration files each session asks for.
-The student creates those; the course never writes into them.
+Student code goes in the directories each session asks for: `intro/` in session 1, `src/`
+and `tests/` from session 3, and the configuration files along the way. The student creates
+those; the course never writes into them.
 
 ### Submitting A Session
 
@@ -83,6 +85,10 @@ and the next session's work still has to start from it.
 
 ## Session 1 Setup
 
+Two things have to be on the machine before session 1: **Python 3.12** and **Docker**
+(Docker Desktop on Windows and macOS, Docker Engine on Linux). `docker run --rm hello-world`
+has to work; the brief says what to check if it does not.
+
 The baseline is one script with three third-party dependencies. Install them any way that
 works and run it:
 
@@ -103,6 +109,11 @@ saved model.pickle
 If it fails, or the numbers differ, write down the Python and package versions and bring them
 to session 2. That difference is the first incident of the course.
 
+The second half of session 1 is a walkthrough from a notebook to a running container on a
+toy regression problem. Its files are in [`sessions/01_intro/`](sessions/01_intro/) and the
+[brief](sessions/01-introduction.md) has the steps; the walkthrough is done in a copy at
+`intro/`, so nothing under `sessions/` is edited.
+
 ## What Is Here, And What Is Not
 
 The full project this course builds is laid out below. The starter has the first two rows.
@@ -111,6 +122,7 @@ The full project this course builds is laid out below. The starter has the first
 |---|---|---|---|
 | `data/01_raw/*.csv` | yes, committed to Git | session 5 moves it to DVC | data that only exists on one laptop |
 | `baseline.py` | yes, one script | session 3 splits it into `src/highrev/` | notebook code nobody can test |
+| `sessions/01_intro/`: notebook, `api.py`, `Dockerfile` on a toy regression | yes, as a preview of sessions 8 and 9 | the HighRev versions arrive in sessions 8 and 9 | a pickle only its author can call |
 | `pyproject.toml`, `uv.lock`, `.python-version` | no | session 2 | `pip install` and hope |
 | `tests/unit`, `tests/integration`, ruff | no | session 3 | "nothing crashed, so it's fine" |
 | `conf/base/catalog.yml`, `parameters.yml`, Kedro pipelines | no | session 4 | hard-coded paths and constants |
@@ -130,7 +142,7 @@ same step on the student's own project. Briefs appear in `sessions/` as they are
 
 | # | Session | Incident | Brief |
 |---|---|---|---|
-| 1 | Lifecycle and system thinking | "The script runs. The score is fine. Now what?" | [posted](sessions/01-introduction.md) |
+| 1 | Lifecycle, system thinking, and a first container | "The script runs. The score is fine. Now what?" | [posted](sessions/01-introduction.md) |
 | 2 | Reproducible environment | "Works on Alice's laptop, fails on Bob's." | week 2 |
 | 3 | Modularization and tests | "A refactor changed predictions without an exception." | week 3 |
 | 4 | Pipelines with Kedro | "Nobody knows which cells run in which order." | week 4 |
@@ -170,8 +182,9 @@ monitored beats a 0.94 AUC that lives in one notebook.
 
 ## Conventions
 
-- Python 3.12 from session 2 on. Windows, macOS, and Linux are all supported; commands are
-  shown for a POSIX shell and work in Git Bash on Windows.
+- Python 3.12 throughout: session 1 installs it by hand, session 2 pins it. Docker from
+  session 1 on. Windows, macOS, and Linux are all supported; commands are shown for a POSIX
+  shell and work in Git Bash on Windows.
 - Questions about a session go to the course repository's issues, titled with the session
   number. Fixes to course files arrive through the weekly drop.
 - Decks and readings from the earlier ASI course are referenced by module number in each
