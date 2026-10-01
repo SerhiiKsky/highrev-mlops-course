@@ -1,0 +1,4 @@
+# One line ending in the repository, whatever the OS; weekly merges stay clean.
+* text=auto eol=lf
+*.csv text eol=lf
+*.pickle binary

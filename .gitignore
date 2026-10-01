@@ -1,0 +1,14 @@
+# the baseline writes its artifact here; the course will give it a better home (sessions 4 and 6)
+model.pickle
+
+# environments and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
