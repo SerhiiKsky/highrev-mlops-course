@@ -85,6 +85,11 @@ to run it from a clean clone. Record whether it ran, which versions were install
 whether the three metrics match. Bring the record to session 2, where the differences are
 the lab.
 
+Start looking for a dataset. The graded project is built on the student's own problem and
+data, not on HighRev; [PROJECT.md](../PROJECT.md) has the rules a dataset has to meet and
+the proposal template. The proposal is due by the session 3 deadline, so two weeks of
+looking start now.
+
 ## Checklist
 
 - [ ] `baseline.py` runs locally and the metrics are recorded with the versions that produced them

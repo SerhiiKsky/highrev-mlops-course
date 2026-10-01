@@ -125,8 +125,8 @@ The full project this course builds is laid out below. The starter has the first
 
 ## Syllabus
 
-Each session opens with an incident and fixes it on this project. Briefs appear in
-`sessions/` as they are posted.
+Each session opens with an incident and fixes it on HighRev in class. The homework is the
+same step on the student's own project. Briefs appear in `sessions/` as they are posted.
 
 | # | Session | Incident | Brief |
 |---|---|---|---|
@@ -143,13 +143,17 @@ Each session opens with an incident and fixes it on this project. Briefs appear 
 | 11 | Monitoring and retraining | "Inputs drifted. Should we retrain?" | week 11 |
 | 12 | Kubernetes and Kubeflow | "Ten teams need isolated, repeatable training jobs." | week 12 |
 
-## Grading
+## The Project And Grading
 
-The final project is this repository, in the student's private copy, demonstrated end to
-end: new
-data arrives, it is versioned, the pipeline runs, the run is tracked, the gate decides, CI
-passes, an image is built, the model is served, a shift is injected, it is detected, and a
-retraining decision is made and defended.
+HighRev is the example the labs are demonstrated on. The graded project is the student's
+own: their problem, their data, their model, built with the same components in the same
+repository. The components are required; the problem, the data, the model, and the quality
+it reaches are free, and the student answers for them. A project on the default HighRev data
+is accepted with a lower ceiling on the grade.
+
+[PROJECT.md](PROJECT.md) has the full description: the required components and their proof,
+what is free, the data rules, the proposal due by session 3, the rubric, and the
+demonstration.
 
 | Dimension | Weight |
 |---|---:|
