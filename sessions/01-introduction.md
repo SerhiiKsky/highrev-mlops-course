@@ -1,130 +1,101 @@
-# Session 01: Lifecycle And System Thinking
+# Session 01: The model lifecycle
 
-**Incident.** A data scientist hands over `baseline.py`. It reads two CSV files, trains a
-model, prints a ROC AUC of 0.76, and saves a pickle. The business wants predictions in the
-checkout flow next quarter. Everyone in the room agrees the model is fine. Nobody can say
-what happens next.
+A data scientist hands over `baseline.py`. It reads two CSV files, trains a model, reports a ROC AUC of 0.76, and saves a pickle. The business wants predictions at checkout next quarter. The model looks good. What happens next?
 
-**Goal.** See the whole lifecycle before touching any tool, then walk one small model
-through the part `baseline.py` stops short of: install the libraries, train in a notebook,
-save the fitted model, wrap it in a prediction service, pack the service into a Docker
-image, and call it over HTTP. Leave with a list of everything that has to be true for a
-prediction to be trusted a year from now.
+Today, you will map the model lifecycle and take a small model from a notebook to a Docker container that accepts HTTP requests. You will also identify what it takes to trust its predictions a year from now.
 
-## The Problem
+## The course problem
 
-A T-shirt shop sells online. Some customers come back and spend far more than the rest. If
-the shop could tell, at a customer's first order, who will become high-revenue, it could
-spend its retention budget on them. The target is binary: total spend above 300 is
-`high_revenue`.
+An online T-shirt shop wants to identify customers who will spend more than 300 in total. It plans to make this prediction at the first order and use it to allocate its retention budget. The binary target is `high_revenue`.
 
-## The Data
+The data is in two files under `data/01_raw/`, committed to Git for now.
 
-Two files in `data/01_raw/`, committed to Git for now.
-
-`customers.csv`, one row per customer:
+`customers.csv` has one row per customer:
 
 | Column | Meaning |
 |---|---|
-| `customerID` | identifier, joins to `orders.customer_id` |
+| `customerID` | Customer identifier; joins to `orders.customer_id` |
 | `gender` | M or F |
-| `birthdate` | `YYYY/M/D`; three rows fall on February 29 of a non-leap year |
-| `user_agent` | browser string at sign-up; the script parses browser and OS from it |
-| `ip_address` | dropped before modeling |
-| `campaign` | whether the customer arrived through a campaign |
-| `ip_address_country` | country resolved from the IP |
+| `birthdate` | `YYYY/M/D`; three dates use February 29 in a non-leap year |
+| `user_agent` | Browser string at sign-up; used to extract browser and OS |
+| `ip_address` | Dropped before modeling |
+| `campaign` | Whether the customer arrived through a campaign |
+| `ip_address_country` | Country inferred from the IP address |
 
-`orders.csv`, one row per order line:
+`orders.csv` has one row per order line:
 
 | Column | Meaning |
 |---|---|
 | `order_date` | `YYYY/MM/DD` |
-| `pages_visited` | pages viewed in the session that produced the order |
-| `order_id` | identifier |
-| `customer_id` | joins to `customers.customerID` |
-| `tshirt_category` | four categories, written two different ways in the raw data |
-| `tshirt_price`, `tshirt_quantity` | multiplied to get the line total |
+| `pages_visited` | Pages viewed during the order session |
+| `order_id` | Order identifier |
+| `customer_id` | Joins to `customers.customerID` |
+| `tshirt_category` | Four categories with inconsistent spelling |
+| `tshirt_price`, `tshirt_quantity` | Price × quantity gives the line total |
 
-Features used by the baseline: `pages_visited`, `age_first_order`, `gender`, `campaign`,
-`ip_address_country`, `browser`, `os`.
+The baseline uses seven features: `pages_visited`, `age_first_order`, `gender`, `campaign`, `ip_address_country`, `browser`, and `os`.
 
-## The Lifecycle
+## The lifecycle
 
-CRISP-DM (ASI module 2) describes the loop: business understanding, data understanding,
-preparation, modeling, evaluation, deployment. `baseline.py` covers the middle four steps
-in 150 lines. The course is about the loop closing: deployment produces new data, new data
-changes the model's world, and the model has to be retrained, re-evaluated, and redeployed
-without anyone redoing the first five steps by hand.
+CRISP-DM, covered in ASI module 2, has six stages: business understanding, data understanding, preparation, modeling, evaluation, and deployment.
 
-The question every student should be able to answer by session 12:
+`baseline.py` covers the middle four. This course extends the work through deployment, monitoring, and retraining. As new data arrives and conditions change, you need to evaluate and update the model without repeating every step by hand.
 
-> What code, environment, data, parameters, model, image, deployment, and monitoring
-> evidence produced the prediction I am looking at right now, and what happens when it
-> stops working?
+By session 12, you should be able to answer:
 
-Each noun in that sentence is a session. Today's container covers "model", "image", and
-"deployment" in the smallest way that still counts: a prediction another program on the
-same machine can ask for. The sessions after this one make that service reproducible,
-tested, tracked, and monitored.
+> Which code, environment, data, parameters, model, image, deployment, and monitoring records explain this prediction? What happens if the system stops working?
 
-## In Class
+Today, you will build a service that another program on your machine can call. Later sessions make it reproducible, tested, tracked, and monitored.
 
-1. Run `baseline.py`. Note the Python version, the package versions, and the three metrics.
-2. Read the script top to bottom. Every `COURSE NOTE` comment marks a production risk. For
-   each one, write down in one sentence what goes wrong if it is left as is.
-3. In pairs, list what has to be true for a prediction from this model to be trusted in the
-   checkout flow in twelve months. Group the list under the nouns in the question above.
-4. Compare the group's list with the syllabus in the README. Anything on the list that no
-   session covers is worth raising now.
-5. Walk through the deployment below. For each step, write down what it produces and what
-   the next step consumes.
+## In class
 
-## First Deployment: Notebook To Container
+1. Run `baseline.py`. Record the Python version, package versions, and three metrics.
+2. Read the script. For each `COURSE NOTE`, write one sentence explaining the production risk.
+3. In pairs, list what must be true to trust this model at checkout in twelve months. Group your answers by the items in the question above.
+4. Compare your list with the README syllabus. Raise any gaps.
+5. Complete the walkthrough. At each step, note what it produces and what the next step needs.
 
-The walkthrough uses a second, deliberately tiny problem, not HighRev. The diabetes dataset
-bundled with scikit-learn has 442 rows, ten numeric features, and a numeric target, so
-there is nothing to download, nothing to clean, and nothing to tune; the whole exercise is
-the plumbing around the model. It is a regression, so the scores are MAE and R², not ROC
-AUC. HighRev stays the course's classification case study and is not touched here. The
-target is a measure of disease progression after one year; nothing in this exercise says
-anything about medical usefulness.
+## From notebook to container
 
-The course files are in [`01_intro/`](01_intro/):
+This exercise uses scikit-learn's diabetes dataset: 442 rows, ten numeric features, and a numeric target measuring disease progression after one year. It needs no download or data cleaning, so you can focus on deployment. This is a regression task, evaluated with MAE and R². It is not an assessment of medical usefulness.
 
-| File | Role |
+HighRev remains the course's classification case study.
+
+The supplied files are in [`01_intro/`](01_intro/):
+
+| File | Purpose |
 |---|---|
-| `01_train_and_serve.ipynb` | trains and evaluates the model; saves it, one request, and the expected answer |
-| `requirements.txt` | the six libraries the notebook and the service need |
-| `api.py` | a FastAPI service that loads the saved model and answers `/health` and `/predict` |
-| `Dockerfile` | packs the service, its dependencies, and the model into an image |
-| `.dockerignore` | keeps the notebook, the environment, and data out of the image |
+| `01_train_and_serve.ipynb` | Trains and evaluates the model; saves it with a sample request and expected prediction |
+| `requirements.txt` | Lists the six required libraries |
+| `api.py` | Loads the model and provides `/health` and `/predict` |
+| `Dockerfile` | Packages the service, dependencies, and model |
+| `.dockerignore` | Excludes the notebook, environment, and data from the image |
 
-Files under `sessions/` belong to the course, so the work happens in a copy at the root of
-the repository:
+Work in a copy at the repository root:
 
 ```bash
 cp -r sessions/01_intro intro
 cd intro
 ```
 
-Everything below runs inside `intro/`. Commands are for a POSIX shell, which on Windows
-means Git Bash; the three places where Windows differs are called out.
+Run the following commands from `intro/`. They use a POSIX shell; on Windows, use Git Bash unless noted otherwise.
 
 ### 1. Check Docker
 
-Install Docker Desktop (Windows, macOS) or Docker Engine (Linux), start it, and run:
+Install and start Docker Desktop on Windows or macOS, or Docker Engine on Linux. Then run:
 
 ```bash
 docker --version
 docker run --rm hello-world
 ```
 
-The first line prints the client version. The second pulls a small image and starts a
-container from it. An **image** is a packaged filesystem plus a startup command; a
-**container** is one running instance of an image. If the second command cannot reach the
-Docker daemon, the engine is not running yet.
+The first command prints the client version. The second downloads an image and runs a container.
 
-### 2. Create The Environment And Install The Libraries
+An **image** packages files and a startup command. A **container** is an instance of that image. If Docker cannot reach the daemon, check that the engine is running.
+
+### 2. Set up Python
+
+Read `requirements.txt`, then create a Python 3.12 environment and install the libraries:
 
 ```bash
 python3.12 -m venv .venv
@@ -132,107 +103,83 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-On Windows the first two lines are `py -3.12 -m venv .venv` and
-`source .venv/Scripts/activate`.
+On Windows, replace the first two commands with:
 
-Read `requirements.txt` first. pandas holds tables, scikit-learn supplies the dataset and
-the model, joblib saves the fitted pipeline, FastAPI and Uvicorn serve HTTP, and JupyterLab
-runs the notebook. Installing them makes them importable in this environment and nothing
-more; no model exists yet.
+```bash
+py -3.12 -m venv .venv
+source .venv/Scripts/activate
+```
 
-### 3. Train In The Notebook
+pandas handles tables, scikit-learn provides the dataset and model, and joblib saves the fitted pipeline. FastAPI and Uvicorn serve HTTP requests. JupyterLab runs the notebook.
+
+Installing these libraries prepares the environment. Training creates the model.
+
+### 3. Train and save the model
 
 ```bash
 python -m jupyter lab
 ```
 
-Open `01_train_and_serve.ipynb` and run it top to bottom, reading each explanation before
-its cell:
+Open `01_train_and_serve.ipynb`. Read the explanations and run the cells in order:
 
-1. Print the Python and library versions. They go into the session record.
-2. Load the dataset and look at the rows, the ten inputs, and the target.
-3. Split off a fifth of the rows for evaluation. Fit imputation, scaling, and Ridge
-   regression as one pipeline on the training rows only.
-4. Compare MAE and R² against a model that always predicts the training mean. Record both.
-   Beating the mean is the whole ambition; the exercise is about closing the loop, not
-   winning it.
-5. Save the pipeline, its feature names, and the target name to `artifacts/model.joblib`.
-   Save one input row to `example.json` and the notebook's prediction for it to
-   `expected.json`.
+1. Record the Python and library versions.
+2. Inspect the dataset, inputs, and target.
+3. Hold out 20% of the rows for evaluation. Fit imputation, scaling, and Ridge regression as one pipeline using only the training rows.
+4. Compare MAE and R² with a model that always predicts the training mean. Record both models' scores.
+5. Save the fitted pipeline, feature names, and target name to `artifacts/model.joblib`. Save one input row to `example.json` and its prediction to `expected.json`.
 
-Then restart the kernel and run all cells again. A notebook that only works because of a
-cell that ran earlier and was later deleted is the first production risk of the exercise.
-Two decisions in the save cell carry through the rest of the course: the request holds
-inputs and never the target, and preprocessing is saved together with the estimator so
-inference applies the same transformations as training.
+Restart the kernel and run all cells again to check that the notebook works from a clean state.
 
-### 4. Serve The Model Locally
+Keep preprocessing and the estimator in the same saved pipeline so training and prediction use the same transformations. Requests contain input features only, never the target.
 
-In a second terminal, in `intro/` with `.venv` activated, record the installed versions
-and start the service:
+### 4. Run the local service
+
+Open a second terminal in `intro/` and activate `.venv`. Record the installed versions and start the API:
 
 ```bash
 python -m pip freeze --exclude pywinpty --exclude pywin32 > requirements.lock.txt
 python -m uvicorn api:app --host 127.0.0.1 --port 8000
 ```
 
-`requirements.lock.txt` lists the exact versions in this environment, including the
-scikit-learn that fitted the model, and the Docker build installs exactly these. The two
-`--exclude` flags drop packages JupyterLab installs only on Windows; they have no Linux
-build, and a lock written on Windows without them fails inside the Linux image. On macOS
-and Linux the flags change nothing. The lock also carries the notebook's dependencies into
-the image, which is why the image ends up near a gigabyte; session 2 separates what the
-service needs from what its author needed.
+Docker will install the versions in `requirements.lock.txt`, including the scikit-learn version used for training. The exclusions remove two Windows-only packages that would fail in the Linux image. They have no effect on macOS or Linux.
 
-Read `api.py` while Uvicorn starts. It loads the artifact once, answers `GET /health`, and
-accepts named numeric features at `POST /predict`. It checks that the names match the
-saved schema, puts them in the saved order, and calls the pipeline. It never trains.
+This file also includes notebook dependencies, making the image large. Session 2 separates training and service dependencies.
 
-In a third terminal, also in `intro/`:
+Read `api.py`. It loads the model once, checks feature names, puts them in the saved order, and returns predictions. It does not train the model.
+
+In a third terminal, also in `intro/`, run:
 
 ```bash
 curl http://127.0.0.1:8000/health
 curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" --data-binary @example.json
 ```
 
-In PowerShell, `curl` is an alias for something else; write `curl.exe`.
+If using PowerShell, write `curl.exe` instead of `curl`.
 
-The first call returns `{"status":"ok","model_loaded":true}`. The second returns a
-`prediction` and a `target`. The prediction has to equal the number in `expected.json`
-down to floating-point noise. <http://127.0.0.1:8000/docs> shows the same two routes as a
-generated page.
+The health response should be `{"status":"ok","model_loaded":true}`. The prediction response contains `prediction` and `target`. Compare the prediction with `expected.json`; they should match apart from tiny floating-point differences. You can also inspect the API at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
-That is the test for today: a request to the service, then a real prediction. A network
-`ping` would prove the machine is up and nothing about the model. These are manual
-observations; automated tests arrive in session 3. The held-out evaluation in the notebook
-is model evaluation, which is a different thing again.
+These manual checks show that the service responds and reproduces the notebook's prediction. The held-out scores measure model quality. Automated tests come in session 3.
 
-Stop Uvicorn with Ctrl+C before the next step; the container wants the same port.
+Stop Uvicorn with Ctrl+C to free port 8000.
 
-### 5. Pack The Service Into An Image
+### 5. Build and run the image
 
-Read the `Dockerfile` first. It starts from a Python 3.12 image, installs the locked
-dependencies, copies `api.py` and the saved model, and starts Uvicorn. The notebook and the
-training data are not in the image: training happened before the build, and the image only
-has to predict.
+Read the `Dockerfile`. It starts from Python 3.12, installs the locked dependencies, copies the API and saved model, and starts Uvicorn. Training happens before the build, so the notebook and training data are excluded.
 
 ```bash
 docker build -t intro-regression:session01 .
 docker run --rm --name intro-regression -p 127.0.0.1:8000:8000 intro-regression:session01
 ```
 
-The final dot is the build context, the directory whose files `COPY` may read. The first
-build takes a few minutes. Leave the second command running. Inside the container Uvicorn
-listens on `0.0.0.0:8000`; `-p` publishes that port at `127.0.0.1:8000` on the host.
-`EXPOSE` in the Dockerfile documents the port and publishes nothing.
+The final dot sets the current directory as the build context: the files Docker can copy. The first build may take a few minutes. Leave the container running.
 
-Repeat both `curl` commands from step 4. The request now goes into the container and the
-answer comes from the model trained in the notebook. Compare the prediction with
-`expected.json` once more.
+Uvicorn listens on `0.0.0.0:8000` inside the container. The `-p` option makes it available at `127.0.0.1:8000` on your machine. `EXPOSE` in the Dockerfile documents the port; it does not publish it.
 
-### 6. Look Inside The Running Service
+Repeat both `curl` commands from step 4. Compare the container's prediction with `expected.json`.
 
-In another terminal:
+### 6. Inspect and stop the container
+
+In another terminal, run:
 
 ```bash
 docker ps
@@ -240,102 +187,83 @@ docker logs intro-regression
 docker stop intro-regression
 ```
 
-Find the container name and the port mapping in the first output and the two requests in
-the second. After the stop, call `/health` again: the connection is refused. `--rm`
-removed the stopped container; the image is still there and `docker run` starts a fresh
-one.
+Find the container name and port mapping in `docker ps`, then find your requests in the logs.
 
-When a step fails, the symptom points at the boundary that broke:
+Call `/health` after stopping the container. The connection should fail. The `--rm` option removes the stopped container, but the image remains. Use `docker run` to start a new container.
 
-| Observation | First thing to inspect |
+| Problem | Check first |
 |---|---|
-| Notebook import fails | which Python is active and whether `pip install` ran in it |
-| API cannot find the model | the notebook's save cell and `artifacts/model.joblib` |
-| Docker build cannot find the lock file | the `pip freeze` output and the current directory |
-| Docker build fails compiling `pywinpty` | the lock was written without the `--exclude` flags; write it again |
-| Host port is already allocated | a Uvicorn still running from step 4, or another container |
-| Connection refused | `docker ps`, the logs, and the `-p` mapping |
-| API returns 422 | feature names and numeric values in `example.json` |
-| Prediction differs from the notebook | the artifact copied into the image and the installed versions |
+| Notebook import fails | Active Python environment and installed packages |
+| API cannot find the model | Notebook save cell and `artifacts/model.joblib` |
+| Docker cannot find the lock file | `pip freeze` output and current directory |
+| Docker build fails on `pywinpty` | Regenerate the lock file with both `--exclude` flags |
+| Port is already allocated | Local Uvicorn process or another container |
+| Connection refused | `docker ps`, logs, and port mapping |
+| API returns 422 | Feature names and numeric values in `example.json` |
+| Prediction differs from the notebook | Model copied into the image and installed versions |
 
-Retraining changes the artifact and nothing else; the image holds the old model until it is
-rebuilt and a new container started.
+After retraining, rebuild the image and start a new container to serve the updated model.
 
-### 7. Explain What Was Built
+### 7. Explain what you built
 
-Point at the notebook, the artifact, the lock file, the image, and the running container,
-and say which changes on retraining, which must be rebuilt, and which is thrown away. Then
-say why a reachable endpoint says nothing about whether the prediction is any good. The
-service answers programs on this one machine; putting it in front of the checkout system,
-controlling access, testing it, and watching it belong to sessions 8 through 11.
+Identify the notebook, saved model, lock file, image, and container. Explain what changes after retraining, what must be rebuilt, and what can be discarded.
 
-## Build A Second Regression
-
-The homework repeats the path on a numeric target. Start with one change to the
-walkthrough, another estimator or a subset of the features, then move to a different
-dataset. A manageable sample is fine; keep enough rows for the held-out evaluation to mean
-something and write down how the sample was chosen.
-
-| Source | Target | Notes |
-|---|---|---|
-| [scikit-learn diabetes](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html) | disease progression after one year | 442 rows, ten features; already in hand through `load_diabetes(as_frame=True, scaled=False)` |
-| [UCI Bike Sharing](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset) | daily rental count, `cnt`, in `day.csv` | `casual` and `registered` sum to the target, so leave them out; hold out the later dates rather than a random fifth |
-| [UCI Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength) | compressive strength in MPa | numeric mixture quantities plus age; nothing to encode |
-
-For public data, record the source URL, license, download date, target, feature units, and
-how the sample was selected. For each feature, ask when it becomes known: a feature
-observed after the prediction moment makes the offline score a lie. For demand over time,
-hold out later dates instead of mixing past and future.
-
-Categorical columns need encoding, and the encoding goes inside the saved pipeline, not in
-the API. The supplied `api.py` accepts numeric features only; a model that needs strings
-needs a new request schema. Regenerate `example.json` from the actual inputs.
-
-What goes into the repository, under `intro/`: the notebook, the recorded metrics and
-versions, `artifacts/model.joblib`, `requirements.lock.txt`, the Dockerfile,
-`example.json`, one captured HTTP response, and a short note on what the target is and who
-could act on the prediction. No test suite yet. `.venv/` is already in the repository's
-`.gitignore` and stays out. Commit as the work progresses and tag the last commit
-`session-01-done`, as the README describes. The bundled dataset does not count toward the
-graded project's own-data requirement.
-
-## Reading
-
-- ASI module 1 deck (introduction) and module 2 deck (ML model lifecycle), with the CRISP-DM
-  notes.
-- ASI module 9, decks 1 and 6: IT system architecture and sourcing strategy. Skim them; they
-  frame the build-or-buy choices the course makes in sessions 5, 6, and 12.
-- [FastAPI in Docker](https://fastapi.tiangolo.com/deployment/docker/) and
-  [Docker port publishing](https://docs.docker.com/get-started/docker-concepts/running-containers/publishing-ports/):
-  the image, startup command, and port mapping used today, explained by their authors.
+Explain why a working endpoint does not prove that its predictions are useful. This service is available only on your machine. Checkout integration, access control, deployment testing, and monitoring follow in sessions 8–11.
 
 ## Homework
 
-Run `baseline.py` on a second machine, or in a fresh virtual environment, or ask a classmate
-to run it from a clean clone. Record whether it ran, which versions were installed, and
-whether the three metrics match. Bring the record to session 2, where the differences are
-the lab.
+### Check reproducibility
 
-Finish the second regression. Bring the notebook's prediction and the container's response,
-plus one sentence on the difference between installing libraries, training a model,
-building an image, and running a service.
+Run `baseline.py` on another machine, in a fresh environment, or from a classmate's clean clone. Record whether it runs, the installed versions, and whether the three metrics match. Bring the record to session 2, including any failures.
 
-Start looking for a dataset. The graded project is built on the student's own problem and
-data, not on HighRev; [PROJECT.md](../PROJECT.md) has the rules a dataset has to meet and
-the proposal template. The proposal is due by the session 3 deadline, so two weeks of
-looking start now. The sources above are a place to start; check any candidate against the
-project rules.
+### Build a second regression
+
+First, change one part of the walkthrough: try another estimator or a subset of features. Then repeat the process with a different dataset and a numeric target.
+
+| Dataset | Target | Notes |
+|---|---|---|
+| [scikit-learn diabetes](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_diabetes.html) | Disease progression after one year | Use for the first variation; load with `load_diabetes(as_frame=True, scaled=False)` |
+| [UCI Bike Sharing](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset) | Daily rentals: `cnt` in `day.csv` | Exclude `casual` and `registered`, which sum to the target. Hold out later dates. |
+| [UCI Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength) | Compressive strength in MPa | Numeric mixture quantities and age; no categorical encoding needed |
+
+You may use a sample. Keep enough rows for a useful evaluation and explain how you selected them. Record the source URL, license, download date, target, and feature units.
+
+Use only features available when the prediction would be made. For time-based demand, evaluate on later dates rather than mixing past and future.
+
+Put any categorical encoding inside the saved pipeline. The supplied API accepts numeric features only, so string inputs require a new request schema. Regenerate `example.json` from the actual inputs.
+
+Commit the following under `intro/`:
+
+- Notebook, metrics, and recorded versions
+- `artifacts/model.joblib` and `requirements.lock.txt`
+- `Dockerfile`
+- `example.json` and one captured HTTP response
+- A short note describing the target, who could use the prediction, and the data source and sampling details
+
+No test suite is required yet. Keep `.venv/` out of Git; it is already in `.gitignore`. Commit as you work and tag the final commit `session-01-done`, following the README.
+
+Bring the notebook's prediction and the container's response. In one sentence, distinguish installing libraries, training a model, building an image, and running a service.
+
+### Choose a project dataset
+
+The graded project uses your own problem and data. HighRev and the bundled dataset do not meet that requirement.
+
+Read [PROJECT.md](../PROJECT.md) for dataset rules and the proposal template. Start looking now: the proposal is due by the session 3 deadline, in two weeks. Check any candidate against the project rules.
+
+## Reading
+
+- ASI modules 1 and 2, including the CRISP-DM notes
+- [FastAPI in Docker](https://fastapi.tiangolo.com/deployment/docker/)
+- [Docker port publishing](https://docs.docker.com/get-started/docker-concepts/running-containers/publishing-ports/)
 
 ## Checklist
 
-- [ ] `baseline.py` runs locally and the metrics are recorded with the versions that produced them
-- [ ] Each `COURSE NOTE` has a one-sentence failure written next to it
-- [ ] The pair's trust list is grouped under the nouns of the course question
-- [ ] `intro/` exists as a copy of `sessions/01_intro/` with a Python 3.12 environment and the libraries installed
-- [ ] The notebook runs from a restarted kernel and saves the complete fitted pipeline
-- [ ] MAE, R², and the installed versions are recorded
-- [ ] The local API answers `/health` and returns the prediction in `expected.json`
-- [ ] The image builds and the container returns the same prediction
-- [ ] The student can say what the artifact, the image, the container, and the port mapping each are
-- [ ] A source and numeric target are chosen for the second regression
-- [ ] The homework record exists, even if the second run failed; a failure is a result
+- [ ] Record baseline metrics and versions; explain each `COURSE NOTE` risk.
+- [ ] Group your pair's trust requirements and compare them with the syllabus.
+- [ ] Create `intro/` and install the libraries in a Python 3.12 environment.
+- [ ] Run the notebook from a restarted kernel; save the full pipeline and record MAE and R².
+- [ ] Confirm that the local API and container return the expected prediction.
+- [ ] Explain the saved model, image, container, and port mapping.
+- [ ] Record the clean-environment baseline run, including any failures.
+- [ ] Complete the second regression and commit the required files.
+- [ ] Begin choosing a dataset for the project proposal.
