@@ -1,0 +1,37 @@
+# Session 2 foundation: can a clean Linux machine rebuild the environment and run the baseline?
+#
+# Intentionally incomplete. Session 3 adds ruff and pytest as gates, session 10 adds the
+# pipeline, the quality gate, caching, a release workflow, and actions pinned to commit SHAs.
+# Session 3 splits baseline.py into src/ and session 5 moves data/01_raw to DVC: each of those
+# briefs says how to change the last step so this workflow stays green.
+
+name: reproduce
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      # setup-uv publishes exact release tags only from v8 on: @v10 does not exist.
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+
+      - name: Rebuild the environment from the lockfile (fails if uv.lock is stale)
+        run: uv sync --locked
+
+      - name: Record what was built
+        run: |
+          uv --version
+          uv run --locked python -c "import sys, pandas, sklearn; print('python', sys.version.split()[0], '| pandas', pandas.__version__, '| scikit-learn', sklearn.__version__)"
+          uv run --locked ruff --version
+
+      - name: Run the baseline
+        run: uv run --locked python baseline.py
