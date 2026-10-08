@@ -1,0 +1,9 @@
+[project]
+name = "highrev-live"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=3.0.6",
+    "scikit-learn>=1.9.1",
+    "user-agents>=2.2.0",
+]
