@@ -1,42 +1,61 @@
 # The Final Project
 
-The project is free in what it predicts and fixed in how it is built. The problem, the data,
-the model, and the quality it reaches are the student's choices and the student's
-responsibility. The engineering around them is not negotiable: every component in the table
-below has to exist, work, and be demonstrated on the student's own repository.
+## TLDR;
+You are free to choose what your ML system predicts and which real-world problem it solves.
+
+One restriction: your dataset must be real. No synthetic or artificially generated datasets. Prefer publicly available, real-world datasets that reflect realistic conditions, including noise, missing values, imbalances, or other real-world complexities. Your data should represent a genuine problem, not an artificially simplified classroom example.
+
+What is flexible: The problem, domain, dataset, prediction target, and modeling approach.
+
+What is fixed: The MLOps engineering requirements and grading criteria. Every team must demonstrate a reproducible, tested, versioned, deployable, and monitorable ML system, following the lifecycle covered throughout the course.
+
+You will be evaluated primarily on how reliably you engineer and operate your ML system, not simply how accurate your predictions are.
+
+The goal is not to build the best model. The goal is to build a system that someone else can reproduce, understand, deploy, and maintain.
+
+## Organisation
+Each team chooses a problem, data, and model. The engineering components below are built in the team's
+private project repository, which is separate from the public course repository, and are
+demonstrated at the end of the course.
+
+Homework is separate individual research and preparation. It is ungraded, stays outside the
+team project repository, and is not project evidence. The project repository contains the
+team's final project work and each student's rubric evidence form.
 
 HighRev, the T-shirt shop in this repository, is the dataset the labs are demonstrated on. It
-is a teaching example, not the assignment. A project built on HighRev is accepted, with a
-lower ceiling on the grade (see Grading).
+is a teaching example. Teams may use it for the project; the project-score cap for using only
+the default HighRev data is stated in [FINAL_PROJECT_RUBRIC.md](FINAL_PROJECT_RUBRIC.md).
+That rubric is the only source for grading details.
 
 ## What Is Fixed
 
-Each component is taught in one session and has to be present in the final repository. The
-right-hand column is what counts as proof during the demonstration.
+Each required component is taught in one session and has to be present in the team's final
+repository. AutoML is an optional extension. The rubric defines the acceptance criteria and
+evidence for every scored component.
 
-| # | Required component | Session | Proof |
-|---|---|---|---|
-| 1 | Reproducible environment: `pyproject.toml`, `uv.lock`, `.python-version` | 2 | `uv sync --frozen` on a clean clone, then the tests pass |
-| 2 | Modular code under `src/` with unit and integration tests, lint clean | 3 | `uv run ruff check .` and `uv run pytest` pass; a deliberately injected bug is caught |
-| 3 | A Kedro pipeline with a data catalog and a parameters file | 4 | `uv run kedro run` from raw data to a trained model with no manual steps |
-| 4 | Raw data versioned with DVC and stored in a remote | 5 | an old commit plus `dvc checkout` reproduces an old model |
-| 5 | MLflow tracking, a model registry, a champion alias, and a quality gate | 6 | two runs; the gate promotes one and refuses the other, with the reason logged |
-| 6 | A prediction service with a typed request and response contract | 8 | `POST /predict` with raw fields; the schema is published at `/docs` |
-| 7 | A container image that carries no model and reads the champion from the registry | 9 | `docker compose up` serves predictions; a new champion needs no rebuild |
-| 8 | CI on every push: lint, tests, pipeline, quality gate; a release workflow for the image | 10 | a green run on the student's repository; a red one where the gate failed |
-| 9 | Monitoring: data drift and outcome quality kept apart, with a written retraining decision | 11 | an injected shift is detected; the decision names which signal justified it |
-| 10 | Kubernetes manifests or a Kubeflow pipeline for the training job | 12 | manifests apply, or the KFP pipeline compiles and its steps match the Kedro pipeline |
-| 11 | A README that tells the operational story of the repository | all | a reader can run the whole loop from the README alone |
+| # | Required component | Session |
+|---|---|---|
+| 1 | Reproducible environment: `pyproject.toml`, `uv.lock`, `.python-version` | 2 |
+| 2 | Modular code under `src/`, tests, and linting | 3 |
+| 3 | Kedro pipeline, catalog, and parameters | 4 |
+| 4 | Raw data versioned with DVC and stored in a remote | 5 |
+| 5 | MLflow tracking, model registry, promoted version, and quality gate | 6 |
+| 6 | Optional AutoML candidate evaluation under a fair protocol | 7 |
+| 7 | Prediction service with a typed request/response contract | 8 |
+| 8 | Docker container and local deployment | 9 |
+| 9 | GitHub Actions quality checks and release workflow | 10 |
+| 10 | Monitoring and a reasoned retraining decision | 11 |
+| 11 | Kubernetes manifests or a Kubeflow Pipelines v2 pipeline | 12 |
+| 12 | Operational README | All |
 
-Everything else from the labs (Streamlit client, AutoML comparison, CML reports, a cloud
-remote) is optional. Optional work counts where it strengthens a graded dimension; it does
-not substitute for a required component.
+Lab checklists and homework are ungraded. Optional extensions do not replace required
+components. See the rubric for which extensions are optional and how evidence is assessed.
 
 ## What Is Free
 
 - **The problem.** Any prediction a real person or system would act on. Classification,
-  regression, ranking, forecasting, anomaly detection: all fine. The proposal has to say who
-  acts on the prediction and what they do differently because of it.
+  regression, ranking, forecasting, anomaly detection: all fine. Make the decision the model
+  supports clear in the team's repository README.
 - **The data.** The student's choice, within the rules below.
 - **The model.** Any family, any library that fits in the environment. A logistic regression
   that is reproducible, served, and monitored outgrades a gradient-boosted ensemble that is
@@ -64,33 +83,34 @@ An own dataset is the expected path. It has to satisfy all of the following:
 4. **Shareable.** Public under a license that permits redistribution, or the student's own
    data with the right to share it with the instructor. No data about identifiable people
    without an explicit license that allows this use.
-5. **Not already solved in the repository.** Any dataset other than HighRev.
+5. **Project choice.** Teams should choose data that fits their problem. The default HighRev
+   dataset may be used; the rubric states the applicable project-score cap.
 
 Sources that meet these rules without much searching: OpenML, the UCI repository, Kaggle
 datasets with a permissive license, national open-data portals, and data the student
 collects or scrapes with permission.
 
-Projects on the default HighRev data skip the business-understanding and data-understanding
-work the rest of the class does, and the grade reflects it: the maximum is 80 of 100.
+Record the source and license so the team can share its data with the instructor. See the
+rubric for scoring treatment of the default HighRev dataset.
 
-## Timeline
+## Suggested project milestones
 
-| By | Deliverable |
-|---|---|
-| Session 3 deadline | `PROPOSAL.md` in the student's repository (template below) |
-| Every session | The session's lab applied to the student's own project, committed and tagged `session-NN-done` |
-| Session 6 | A registered model and a quality gate on the student's data |
-| Session 10 | CI green on the student's repository |
-| Session 12 | Live demonstration |
+Use these milestones to plan team work. They are not separate graded submissions.
 
-Labs are demonstrated in class on HighRev. The homework for each session is the same step
-on the student's project. A student who only follows along on HighRev has done the lab, not
-the homework.
+| Session | Suggested progress |
+|---:|---|
+| 3 | Agree a prediction problem and identify candidate data. |
+| 6 | Track runs and register a model for the selected data. |
+| 10 | Run the quality checks in team-repository CI. |
+| 12 | Present the operational system using the final rubric. |
 
-### Proposal Template
+Homework is ungraded research and preparation for concepts discussed in class. The optional
+planning prompts below can help a team prepare; no `PROPOSAL.md` submission or separate
+written report is required.
 
-Create `PROPOSAL.md` at the root of the repository with these headings. One or two
-paragraphs each is enough; a page in total.
+### Optional planning prompts
+
+Teams may use these questions while selecting a project:
 
 ```
 # Proposal: <project name>
@@ -113,27 +133,15 @@ simulated or observed in session 11.
 What could stop this project, and the fallback.
 ```
 
-The proposal is a commitment, not a contract. Changing the dataset after session 5 means
-redoing the DVC and MLflow work on the new data; that is allowed, and the reason goes into
-the README.
+If the team changes its dataset after session 5, repeat the relevant DVC and MLflow work and
+briefly explain the change in the operational README.
 
 ## Grading
 
-| Dimension | Weight | Full marks look like |
-|---|---:|---|
-| Reproducibility of environment, data, and run | 20 | A clean machine rebuilds the environment, pulls the data, and reproduces a named model version from a commit hash |
-| Modular code, tests, engineering quality | 15 | Pure functions with tests that catch an injected bug; lint clean; no notebooks on the critical path |
-| Pipeline and data lineage | 15 | One command runs raw to model; the catalog shows where every dataset lives; parameters are not in code |
-| Experiment and model lifecycle (registry, gate) | 15 | Runs are comparable; the champion is named; the gate's two rules are justified for this problem |
-| API, container, deployment | 15 | Typed contract; image without a model; Compose brings up registry and service together |
-| CI/CD quality gates | 10 | Lint, tests, and the gate run on push; a failing gate blocks the release |
-| Monitoring, incident diagnosis, retraining reasoning | 10 | Drift and outcome quality reported separately; the retrain decision cites the right one |
-
-A project on the default HighRev data is capped at 80 points in total.
-
-Model quality has no row. A proposal that says why a 0.72 AUC is good enough for the decision
-it supports, and a gate that enforces it, earns the lifecycle points. A 0.95 with no argument
-for the threshold does not.
+[FINAL_PROJECT_RUBRIC.md](FINAL_PROJECT_RUBRIC.md) is the single source for rubric weights,
+acceptance criteria, evidence, individual scoring, activity-point conversion, the HighRev
+project-score cap, and the final demonstration. Do not use this project overview or session
+checklists as a separate grading scheme.
 
 ## The Demonstration
 

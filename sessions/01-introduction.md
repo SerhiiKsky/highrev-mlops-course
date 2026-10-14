@@ -74,9 +74,13 @@ The supplied files are in [`01_intro/`](01_intro/):
 Work in a copy at the repository root:
 
 ```bash
-cp -r sessions/01_intro intro
-cd intro
+cp -r sessions/01_intro ../<team-project>/intro
+cd ../<team-project>/intro
 ```
+
+Run this from the course checkout. The copy goes into your separate private team project
+repository. Keep the course checkout unchanged; homework and personal preparation stay
+outside the project repository.
 
 Run the following commands from `intro/`. They use a POSIX shell; on Windows, use Git Bash unless noted otherwise.
 
@@ -210,15 +214,15 @@ Identify the notebook, saved model, lock file, image, and container. Explain wha
 
 Explain why a working endpoint does not prove that its predictions are useful. This service is available only on your machine. Checkout integration, access control, deployment testing, and monitoring follow in sessions 8–11.
 
-## Homework
+## Optional preparation (ungraded)
 
 ### Check reproducibility
 
-Run `baseline.py` on another machine, in a fresh environment, or from a classmate's clean clone. Record whether it runs, the installed versions, and whether the three metrics match. Bring the record to session 2, including any failures.
+If useful, try `baseline.py` in a fresh environment or on another machine. Notice which versions and metrics change. This is personal preparation; there is nothing to submit.
 
 ### Build a second regression
 
-First, change one part of the walkthrough: try another estimator or a subset of features. Then repeat the process with a different dataset and a numeric target.
+For extra practice, change one part of the walkthrough (for example, the estimator or feature set), then try a different dataset with a numeric target.
 
 | Dataset | Target | Notes |
 |---|---|---|
@@ -226,29 +230,13 @@ First, change one part of the walkthrough: try another estimator or a subset of 
 | [UCI Bike Sharing](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset) | Daily rentals: `cnt` in `day.csv` | Exclude `casual` and `registered`, which sum to the target. Hold out later dates. |
 | [UCI Concrete Compressive Strength](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength) | Compressive strength in MPa | Numeric mixture quantities and age; no categorical encoding needed |
 
-You may use a sample. Keep enough rows for a useful evaluation and explain how you selected them. Record the source URL, license, download date, target, and feature units.
+You may use a sample. Keep enough rows for a useful evaluation. Note the source, target, and feature units for your own reference.
 
 Use only features available when the prediction would be made. For time-based demand, evaluate on later dates rather than mixing past and future.
 
-Put any categorical encoding inside the saved pipeline. The supplied API accepts numeric features only, so string inputs require a new request schema. Regenerate `example.json` from the actual inputs.
+The walkthrough is for practice. You may keep a local copy and note the difference between installing libraries, training a model, building an image, and running a service. No homework artifact, tag, or dataset proposal is graded or required.
 
-Commit the following under `intro/`:
-
-- Notebook, metrics, and recorded versions
-- `artifacts/model.joblib` and `requirements.lock.txt`
-- `Dockerfile`
-- `example.json` and one captured HTTP response
-- A short note describing the target, who could use the prediction, and the data source and sampling details
-
-No test suite is required yet. Keep `.venv/` out of Git; it is already in `.gitignore`. Commit as you work and tag the final commit `session-01-done`, following the README.
-
-Bring the notebook's prediction and the container's response. In one sentence, distinguish installing libraries, training a model, building an image, and running a service.
-
-### Choose a project dataset
-
-The graded project uses your own problem and data. HighRev and the bundled dataset do not meet that requirement.
-
-Read [PROJECT.md](../PROJECT.md) for dataset rules and the proposal template. Start looking now: the proposal is due by the session 3 deadline, in two weeks. Check any candidate against the project rules.
+If you want to start thinking about the final project, [PROJECT.md](../PROJECT.md) describes the scope and [FINAL_PROJECT_RUBRIC.md](../FINAL_PROJECT_RUBRIC.md) is the sole grading reference. Project planning is optional at this stage.
 
 ## Reading
 
@@ -259,11 +247,9 @@ Read [PROJECT.md](../PROJECT.md) for dataset rules and the proposal template. St
 ## Checklist
 
 - [ ] Record baseline metrics and versions; explain each `COURSE NOTE` risk.
-- [ ] Group your pair's trust requirements and compare them with the syllabus.
+- [ ] Group your team's trust requirements and compare them with the syllabus.
 - [ ] Create `intro/` and install the libraries in a Python 3.12 environment.
 - [ ] Run the notebook from a restarted kernel; save the full pipeline and record MAE and R².
 - [ ] Confirm that the local API and container return the expected prediction.
 - [ ] Explain the saved model, image, container, and port mapping.
-- [ ] Record the clean-environment baseline run, including any failures.
-- [ ] Complete the second regression and commit the required files.
-- [ ] Begin choosing a dataset for the project proposal.
+- [ ] Optional: note what changed in a fresh environment or second regression.

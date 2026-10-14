@@ -18,8 +18,11 @@ month that 0.764 came from these versions? Nothing in the repository says.
 checked and formatted by a linter whose version is locked. And a machine nobody in the room
 configured has been asked to do the same.
 
-This is component 1 of [PROJECT.md](../PROJECT.md) and the first half of the rubric row
-"Reproducibility of environment, data, and run."
+This work supports the environment criterion in [FINAL_PROJECT_RUBRIC.md](../FINAL_PROJECT_RUBRIC.md).
+
+Run the coding exercises from your private team project repository. At session 1, copy
+`baseline.py` and `data/` from the separate course checkout into this repository. Keep course
+briefs and labs in the course checkout; do not add it as a remote or merge its history.
 
 ## Before Class
 
@@ -34,7 +37,7 @@ On Windows, install from PowerShell with
 `winget install --id=astral-sh.uv -e`, then open a new Git Bash window so `uv` is on the
 PATH. On macOS and Linux, `curl -LsSf https://astral.sh/uv/install.sh | sh`.
 
-Commit any loose session 1 work in `intro/`, and bring the session 1 homework record.
+Bring any questions from your session 1 practice. Homework and lab checklist completion are ungraded.
 
 ## Words For Today
 
@@ -101,8 +104,8 @@ One rule:
 | `.ruff_cache/` | no | created by Ruff in Ex 5 |
 | `.venv-automl/` and other scratch environments | no | see the PyCaret section |
 | `intro/` evidence (`model.joblib`, the lock file, captured responses) | yes | session 1 asked for it: the rule's second clause |
-| `sessions/`, `data/`, `checks/` | yes, owned by the course | arrive in weekly drops; leave them unchanged |
-| `.gitattributes` | yes, owned by the course | keeps line endings LF on every OS; without it Git on Windows warns "LF will be replaced by CRLF" for every file |
+| `sessions/`, `checks/` | no | these course materials stay in the separate course checkout |
+| `.gitattributes` | yes, if copied with the starter | keeps line endings LF on every OS; without it Git on Windows warns "LF will be replaced by CRLF" for every file |
 
 **From this session on, `.gitignore` belongs to the student.** Each later brief that creates
 a new generated artifact says what to add; course drops never edit it.
@@ -132,14 +135,14 @@ not as a gate:
   Session 1's image carried JupyterLab because one list mixed both; the `dev` group is the
   separation session 9 relies on.
 
-Ruff runs on `baseline.py`. The configuration excludes `sessions/` (course-owned files) and
-`intro/` (the graded session 1 record), so "fixing" either is never on the table.
+Ruff runs on the project's `baseline.py`. Lesson files are outside this repository, so the
+configuration only needs to exclude `intro/` (your session 1 walkthrough copy).
 
 ### pyproject.toml At The End Of The Session
 
 ```toml
 [project]
-name = "highrev-mlops-course"
+name = "highrev-team-project"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -155,7 +158,7 @@ dev = [
 
 [tool.ruff]
 line-length = 100
-extend-exclude = ["sessions", "intro"]
+extend-exclude = ["intro"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
@@ -217,9 +220,9 @@ baseline? Every command in it is run by hand in Ex 4 and Ex 5 first.
 
 ## In Class
 
-Commands are for a POSIX shell (Git Bash on Windows), from the repository root unless
-stated. Stage files by name; never `git add .` in this session, because `intro/` may hold
-uncommitted session 1 work.
+Commands are for a POSIX shell (Git Bash on Windows), from the team project repository root
+unless stated. Stage files by name; never `git add .` in this session, because `intro/` may
+hold uncommitted session 1 work.
 
 ### Ex 1: Build The Environment From The Starter
 
@@ -343,7 +346,7 @@ uncommitted session 1 work.
    ```
 
 2. Compare the version line and the metrics with the working copy and with the session 1
-   record. Write the comparison down; the homework uses it.
+   record. Use the comparison to discuss what a clean clone proves.
 3. What does this prove, and what doesn't it? Ex 7 answers the second half.
 4. Return and remove the clone: `cd - && rm -rf ../highrev-clean`.
 
@@ -367,8 +370,8 @@ uncommitted session 1 work.
 3. Add the `[tool.ruff]` and `[tool.ruff.lint]` tables from
    [pyproject.toml At The End Of The Session](#pyprojecttoml-at-the-end-of-the-session) to
    `pyproject.toml`, as one block at the end, then run `uv run ruff check .` again. Why did
-   the first finding disappear, and where did the new ones come from? Why don't `sessions/`
-   or `intro/` appear?
+   the first finding disappear, and where did the new ones come from? Why is `intro/`
+   excluded from Ruff?
 
 4. Format, and check the formatter's promise not to change behavior:
 
@@ -426,7 +429,7 @@ PyCaret 3.3 to fit, and what would that cost the baseline?
 
    ```bash
    mkdir -p .github/workflows
-   cp sessions/02_environment/reproduce.yml .github/workflows/reproduce.yml
+   cp ../highrev-mlops-course/sessions/02_environment/reproduce.yml .github/workflows/reproduce.yml
    git add .github/workflows/reproduce.yml
    git commit -m "Add a minimal workflow: rebuild from uv.lock on Linux and run the baseline"
    git push origin main
@@ -477,7 +480,7 @@ which is fine as long as the lockfile and the printed versions agree.
 | Ex 4 | `uv sync --locked` succeeds; a `python 3.12.x \| pandas ... \| scikit-learn ...` line; the same three metrics |
 | Ex 5, step 1 | the Ruff version printed matches the lockfile entry |
 | Ex 5, step 2 | one finding about `datetime.datetime.now()`; the format check says the file would be reformatted |
-| Ex 5, step 3 | three `E501 Line too long` findings in `baseline.py`; nothing from `sessions/` or `intro/` |
+| Ex 5, step 3 | three `E501 Line too long` findings in `baseline.py`; `intro/` is excluded |
 | Ex 5, step 4 | `1 file reformatted`; `All checks passed!`; `metrics identical` |
 | Ex 5, step 7 | two commits |
 | Ex 6 | a conflict that names pandas; `git status` empty |
@@ -497,7 +500,7 @@ which is fine as long as the lockfile and the printed versions agree.
 | metrics differ from the README | was the script started with `uv run`? Compare the version line from Ex 4 with a classmate's |
 | `ruff --version` differs from the lockfile | a Ruff from somewhere else is answering; use `uv run ruff`, and `deactivate` other environments |
 | TOML error "duplicate key" | `[tool.ruff]` appears twice in `pyproject.toml`; merge into one table |
-| Ruff reports files under `sessions/` or `intro/` | `extend-exclude` is missing from `[tool.ruff]` |
+| Ruff reports files under `intro/` | `extend-exclude` is missing from `[tool.ruff]` |
 | Git warns "LF will be replaced by CRLF" | `.gitattributes` is missing or edited; restore the starter's |
 | the workflow fails with "unable to resolve action" | an action tag was shortened; `astral-sh/setup-uv` needs the full `v10.2.0` |
 | no run appears under Actions | the file must sit in `.github/workflows/` on `main`, and Actions must be enabled in the repository settings |
@@ -515,38 +518,13 @@ which is fine as long as the lockfile and the printed versions agree.
 - ASI module 3 portability tutorials: the same problem solved with conda's
   `environment.yml`.
 
-## Homework
+## Optional preparation (ungraded)
 
-The homework is the same step on the student's own project. The proposal is due by the
-session 3 deadline ([PROJECT.md](../PROJECT.md)), so this week doubles as proposal groundwork.
-
-1. **Finish the in-class work** if anything is open: the clean clone (Ex 4) and a workflow
-   run (Ex 7). A red run with a written reason counts; no run at all does not.
-2. **Close the session 1 incident.** In `notes/session-02.md`, compare the session 1 record
-   (versions and metrics on the other machine) with the locked versions and the runner's
-   log. Name the difference that most likely explains any mismatch, or say why the numbers
-   matched anyway, given that the Python patch version and uv's own version may still
-   differ.
-3. **Load the candidate dataset inside the locked environment.** For the dataset considered
-   for `PROPOSAL.md`, write a short script that loads it and prints its shape and the
-   target's distribution. Add every library it needs with `uv add` (a Parquet or Excel
-   reader, for example), never `pip install`. Commit `pyproject.toml` and `uv.lock` with the
-   loader. Keep data over a few megabytes out of Git; session 5 gives it a home with DVC.
-4. **Prove it again.** Clean-clone the repository and rerun the loader and the baseline. Push
-   and confirm the workflow is still green.
-5. **Draft `PROPOSAL.md`** from the PROJECT.md template. Under "Data", note the format and
-   the libraries the loader needed; under "Risks", note any dependency that conflicted or
-   failed to install.
-6. **Tag once, at the end:**
-
-   ```bash
-   git tag session-02-done
-   git push origin main --tags
-   ```
-
-Tests don't exist until session 3, so today's proof is "clean clone, then the same three
-metrics." The final demonstration keeps PROJECT.md's wording: `uv sync --frozen` on a clean
-clone, then the tests pass.
+For your own practice, repeat `uv sync` from a clean clone, compare the lockfile with the
+installed versions, or explore a dataset loader. These activities are not submissions. No
+homework, lab checklist, tag, or proposal is graded or required. The final-project scope is
+in [PROJECT.md](../PROJECT.md); all grading details and the individual evidence form are in
+[FINAL_PROJECT_RUBRIC.md](../FINAL_PROJECT_RUBRIC.md).
 
 ## Checklist
 
@@ -561,7 +539,5 @@ clone, then the tests pass.
 - [ ] Ruff is in the `dev` group, configured in `pyproject.toml`, and its version matches the lockfile
 - [ ] `baseline.py` is formatted in its own commit, its docstring runs with uv, and its metrics are unchanged
 - [ ] `.github/workflows/reproduce.yml` is pushed and has at least one run
-- [ ] The project's own run instructions use uv, not `pip install`; `intro/` stays as the session 1 record
-- [ ] The candidate dataset loads inside the locked environment
-- [ ] `notes/session-02.md` closes the session 1 incident
-- [ ] The last commit is tagged `session-02-done`
+- [ ] The project's own run instructions use uv, not `pip install`; `intro/` stays as your session 1 walkthrough copy
+- [ ] Optional: the student can explain how the lockfile supports a repeatable environment

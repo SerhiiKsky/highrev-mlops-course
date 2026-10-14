@@ -24,64 +24,50 @@ that teaches it.
 - **`main` is append-only.** Corrections to a posted brief arrive as new commits, never as
   rewritten history, so every student copy can keep pulling.
 - **Solutions are not in this repository.** A reference implementation for each session is
-  shared separately after that session's deadline. Nothing a student can pull from here will
+  shared separately after the session. Nothing a student can pull from here will
   ever overwrite their own code.
 
 ### Student Setup
 
-Student work lives in a **private copy**, not a fork. A fork of a public repository is
-public on GitHub, which would make every student's homework readable by every other student.
+Keep two repositories, with separate working folders:
 
-1. Create an empty **private** repository on GitHub named `highrev-mlops-course`. Do not add
-   a README or `.gitignore`; it must be empty.
-2. Clone the course repository, point `origin` at the private copy, and keep the course as
-   `upstream`:
+1. Clone this public course repository for lesson briefs, labs, and reference material:
 
    ```bash
    git clone https://github.com/<course-org>/highrev-mlops-course.git
    cd highrev-mlops-course
-   git remote rename origin upstream
-   git remote add origin https://github.com/<student>/highrev-mlops-course.git
-   git push -u origin main --tags
    ```
 
-   GitHub's **Import repository** page does the same thing in the browser; after importing,
-   add `upstream` by hand with the third command above.
-3. Invite the instructor as a collaborator: repository **Settings**, **Collaborators**,
-   **Add people**, GitHub handle `<instructor-github-handle>`. Review happens on commits in
-   the private copy, so without this invitation there is nothing to grade.
+   Update this checkout when course materials change with `git pull --tags`.
+2. Create a separate **private** repository for your team project. Clone that repository
+   into its own folder and invite all three teammates and the instructor.
+3. Follow each brief to create or copy only the named starter code into the team project
+   repository. Do not copy the course repository's `.git` history, lesson files, or lab
+   checklists into the project repository. Do not add the course repository as a Git remote.
 
-Then, each week:
+Course materials stay in the course checkout and update there. Teams implement project work
+in their private project repository. No course update is merged over team work. Homework is
+separate individual research and preparation: keep it outside the team project repository;
+it is not collected or graded.
 
-```bash
-git pull upstream main --tags
-```
+### Showing Your Development Story
 
-Files under `sessions/`, `data/`, and `checks/` belong to the course; leave them unchanged.
-Student code goes in the directories each session asks for: `intro/` in session 1, `src/`
-and `tests/` from session 3, and the configuration files along the way. The student creates
-those; the course never writes into them.
+Use issues, commits, and pull requests to make the team's engineering story easy to follow.
+This history supports the final-project evidence and each student's rubric form; it is not a
+separate session grade. Do not optimize for commit count.
 
-### Submitting A Session
-
-The commit history is the submission. For each session:
-
-- Commit as the work progresses, with messages that say what changed and why. One commit
-  that says "session 3" is one commit's worth of evidence; ten that each name a decision are
-  ten.
-- When the session's checklist is done, tag the last commit and push:
+- Write commit messages that explain meaningful changes and why they were made. Link pull
+  requests to issues or tasks when possible, and include tests/review in the story.
+- Session tags are optional checkpoints, not submissions. If your team uses one:
 
   ```bash
   git tag session-03-done
   git push origin main --tags
   ```
 
-- The review covers every commit between the previous `-done` tag and this one, against the
-  checklist at the end of the brief. Comments arrive on the commits in GitHub; replies and
-  fixes are further commits, not amended ones.
-
-A session submitted after its deadline is still reviewed; the delay is noted in the grade,
-and the next session's work still has to start from it.
+The instructor assesses the final project using [FINAL_PROJECT_RUBRIC.md](FINAL_PROJECT_RUBRIC.md).
+Each student fills in the rubric's evidence form with links to their relevant issues, pull
+requests, commits, tests, and reports. Lab checklists are ungraded learning aids.
 
 ## Session 1 Setup
 
@@ -89,8 +75,8 @@ Two things have to be on the machine before session 1: **Python 3.12** and **Doc
 (Docker Desktop on Windows and macOS, Docker Engine on Linux). `docker run --rm hello-world`
 has to work; the brief says what to check if it does not.
 
-The baseline is one script with three third-party dependencies. Install them any way that
-works and run it:
+In the course checkout, the baseline is one script with three third-party dependencies.
+Install them any way that works and run it:
 
 ```bash
 pip install pandas scikit-learn user-agents
@@ -137,14 +123,15 @@ The full project this course builds is laid out below. The starter has the first
 
 ## Syllabus
 
-Each session opens with an incident and fixes it on HighRev in class. The homework is the
-same step on the student's own project. Briefs appear in `sessions/` as they are posted.
+Each session opens with an engineering incident and practical work on HighRev. Homework is
+ungraded research and preparation for concepts discussed in class. Briefs appear in
+`sessions/` as they are posted.
 
 | # | Session | Incident | Brief |
 |---|---|---|---|
 | 1 | Lifecycle, system thinking, and a first container | "The script runs. The score is fine. Now what?" | [posted](sessions/01-introduction.md) |
 | 2 | Reproducible environment | "Works on Alice's laptop, fails on Bob's." | [posted](sessions/02-environment.md) |
-| 3 | Modularization and tests | "A refactor changed predictions without an exception." | week 3 |
+| 3 | Modularization and tests | "A refactor changed predictions without an exception." | [brief](sessions/03-modularization-and-tests.md) |
 | 4 | Pipelines with Kedro | "Nobody knows which cells run in which order." | week 4 |
 | 5 | Data versioning with DVC | "The commit exists; the training CSV does not." | week 5 |
 | 6 | Experiment tracking and registry with MLflow | "Thirty-seven runs. Which one is in production?" | week 6 |
@@ -155,30 +142,14 @@ same step on the student's own project. Briefs appear in `sessions/` as they are
 | 11 | Monitoring and retraining | "Inputs drifted. Should we retrain?" | week 11 |
 | 12 | Kubernetes and Kubeflow | "Ten teams need isolated, repeatable training jobs." | week 12 |
 
-## The Project And Grading
+## The Project and Grading
 
-HighRev is the example the labs are demonstrated on. The graded project is the student's
-own: their problem, their data, their model, built with the same components in the same
-repository. The components are required; the problem, the data, the model, and the quality
-it reaches are free, and the student answers for them. A project on the default HighRev data
-is accepted with a lower ceiling on the grade.
-
-[PROJECT.md](PROJECT.md) has the full description: the required components and their proof,
-what is free, the data rules, the proposal due by session 3, the rubric, and the
-demonstration.
-
-| Dimension | Weight |
-|---|---:|
-| Reproducibility of environment, data, and run | 20 |
-| Modular code, tests, engineering quality | 15 |
-| Pipeline and data lineage | 15 |
-| Experiment and model lifecycle (registry, gate) | 15 |
-| API, container, deployment | 15 |
-| CI/CD quality gates | 10 |
-| Monitoring, incident diagnosis, retraining reasoning | 10 |
-
-The model's score is not a row in that table. A 0.76 AUC that can be reproduced, served, and
-monitored beats a 0.94 AUC that lives in one notebook.
+HighRev is the instructor-maintained reference project. Each team develops its project in
+one private repository. [PROJECT.md](PROJECT.md) describes the project scope and required
+technical components. [FINAL_PROJECT_RUBRIC.md](FINAL_PROJECT_RUBRIC.md) is the single source
+for weights, acceptance criteria, required evidence, individual contribution scoring, activity
+points, and the final demonstration. Use its form to link each student's work to the team's
+GitHub story. There are no separate homework, lab-checklist, or session grades.
 
 ## Conventions
 
