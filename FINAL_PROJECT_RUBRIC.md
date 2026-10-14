@@ -1,14 +1,13 @@
 # Final Project Rubric
 
-**Audience:** student teams of three; one repository per team  
-**Purpose:** assess the operational ML system built across the twelve sessions  
 **Scoring:** 100 project points per student, plus optional individual activity points as described below  
 **Demonstration:** 15 minutes, live, from the team's repository  
 **Written report:** none required
 
 The seven dimensions below sum to 100. Each dimension combines the team result with each student's own evidence: 80% of its points come from the shared project; 20% come from that student's GitHub story and demonstration. This lets students on one team earn different scores while using the same criteria.
 
-Every listed criterion is required for the team result. Score it at its listed weight only when all its acceptance conditions and required evidence are present; otherwise award zero for that criterion. Optional enhancements cannot replace a required criterion or add points beyond 100.
+Every listed criterion is required for the team result. Score it at its listed weight only when all its acceptance conditions and required evidence are present; otherwise award zero for that criterion. Optional enhancements cannot replace a required criterion or add points beyond 100. Lab checklists are supporting evidence, never separate grades.
+
 
 ## Grading formula
 
@@ -20,10 +19,11 @@ The shared team score `Tj` uses the full criteria and evidence in each dimension
 
 Each student's activity points are optional and tracked individually. Approximately 25 raw activity points convert to at most 15 percentage points, at 0.6 grade points per point. The final grade is `min(100, P_student + min(0.6 × A_student, 15))`. A student can receive full project points without activity points.
 
-> [!IMPORTANT]
-> **Homework and lab work are not separate grades.** Homework, lab completion, and checklist completion are not separately graded.
->
-> **Live activity rewards are announced in class.** The instructor states each live task and its reward during the lesson.
+!!!!
+- Homework, lab completion, and checklist completion are not separately graded. 
+- The instructor states each live task and its reward during the lesson.
+
+!!!!
 
 The existing project rule for using only the default HighRev data remains: the project score `P_student` is capped at 80/100 before activity points are added. Other projects use the full 100-point rubric.
 
@@ -145,19 +145,7 @@ Examples include a Streamlit client, an AutoML comparison, CML pull-request repo
 The session-12 orchestration criterion is mandatory, with a compile-only Kubeflow Pipelines path so a full cluster is not needed. AutoML is an optional project extension and carries no points by itself.
 
 
-## Quick FAQs
-
-**Are homework, lab completion, or checklists graded?** No. Homework is preparation; lab and checklist work can help you learn and locate project evidence. See the highlighted policy above.
-
-**Are live activities required?** No. They are optional. The instructor announces the task and reward during the lesson; activity points are tracked individually. See [Grading formula](#grading-formula).
-
-**How is individual contribution recognized?** Each dimension combines the shared team result with individual evidence from your rubric form and five-minute demonstration. See [Grading formula](#grading-formula) and [the individual rubric form](#github-development-story-and-individual-rubric-form).
-
-**Do we submit a written report?** No. The repository and 15-minute operational demonstration are the final-project evidence. See [Required final-project evidence and demonstration](#required-final-project-evidence-and-demonstration).
-
-**Are AutoML or a full cluster required?** AutoML is optional. A full cluster is not required; see [Optional enhancements](#optional-enhancements) and the orchestration criterion.
-
-## Alignment to the 12 sessions (just a map of content)
+## Alignment to the 12 sessions (Just a map of content)
 
 | Session | What it contributes to the project | Final-project status |
 |---:|---|---|
