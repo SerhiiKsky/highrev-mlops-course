@@ -1,4 +1,4 @@
-# Session 03: Modularization and testing
+﻿# Session 03: Modularization and testing
 
 **Incident.** A refactor changes the age feature from fractional years to whole years.
 The script still trains, prints metrics, and saves a model. Which check would show that
@@ -39,7 +39,8 @@ destination. It links all required starter files. Also use:
 - [Configuration fragment](03_modularization/config-snippets.toml): packaging and pytest
   settings to **merge** into your current `pyproject.toml`.
 - [Blank contract and evidence record](03_modularization/contracts-and-evidence.md): copy
-  to `notes/session-03.md` and fill in your own results.
+  to 
+otes/session-03.md` and fill in your own results.
 - [Integration and workflow requirements](03_modularization/integration-requirements.md):
   the required behavior for Ex 6, without an implementation.
 
@@ -72,18 +73,28 @@ normalization helper at module scope so the saved model can find it on reload.
 
 ## In class
 
-The teacher introduction and demonstration take at most 30 minutes. The six practical
-blocks below take 130 minutes, with a 10-minute break after Ex 3 and a 10-minute wrap-up:
-180 minutes in total. All six exercises are individual. Use your own working copy
-and branch; implement every component, write your own tests, and record your own
-runs and reasoning. Ask the instructor for help when blocked. Timing is a guide:
-prioritize the core behaviors and record any unfinished work before Session 4.
+The presentation and demo take 30 minutes. An eight-minute GitHub Actions walkthrough
+follows as bonus content. The six individual exercises do in your own pace. All six
+exercises are individual. Use your own working copy and branch; implement every
+component, write your own tests, and record your own runs and reasoning. The bonus
+is a guided reading of your existing workflow; it does not require a GitHub account
+or a successful remote run.
+|
+### Bonus: GitHub Actions walkthrough 
 
-### Ex 1 — Map responsibilities and save the baseline (15 minutes)
+After the presentation, open your existing `.github/workflows/reproduce.yml`. Trace the locked environment setup, Ruff checks, unit tests, integration tests, and application command. Match each step to the local command in Ex 6. This shows how local checks can run on a hosted runner; it does not require a remote run. The workflow edit remains in Ex 6.
+### Ex 1 — Finish Session 2 and install pre-commit 
 
-**Start:** the working Session 2 project. **Purpose:** know what must remain equivalent.
+**Start:** the working Session 2 project. **Purpose:** finish its quality setup and know what must remain equivalent.
 
-1. Open `baseline.py`. Identify I/O, order aggregation, customer features, target creation,
+1. Confirm `uv sync --locked`, the existing baseline run, and Ruff check/format commands work. Ruff is already part of Session 2; this lesson connects those checks to commits. Run `uv add --dev "pre-commit>=4,<5"` to add the hook runner, copy `03_modularization/pre-commit-config.yaml` to the project root as `.pre-commit-config.yaml`, run `uv lock` and `uv sync --locked`, then install and run the hook:
+
+   ```bash
+   uv run --locked pre-commit install
+   uv run --locked pre-commit run --all-files
+   ``` 
+
+   Make a small local commit and observe the Ruff hooks run. Then open `baseline.py`. Identify I/O, order aggregation, customer features, target creation,
    splitting, model construction, fitting, and evaluation. Sketch the dependencies between
    those responsibilities before moving lines.
 2. Inspect `git status --short` and record the current commit. Save a baseline run and
@@ -104,7 +115,7 @@ prioritize the core behaviors and record any unfinished work before Session 4.
 the same baseline in the locked environment. If it fails, repair Session 2 readiness first.
 Keep `baseline.py` as the comparison until the modular command works.
 
-### Ex 2 — Extract modules without changing behavior (30 minutes)
+### Ex 2 — Extract modules without changing behavior 
 
 **Start:** Ex 1's baseline and the supplied skeleton. **Purpose:** make behavior importable.
 
@@ -171,7 +182,7 @@ Importing any module does not execute it. An incomplete function still raises an
 Commit implementation and packaging changes when this checkpoint works. Keep generated
 `model.pickle` ignored.
 
-### Ex 3 — Specify contracts and write focused tests (25 minutes)
+### Ex 3 — Specify contracts and write focused tests 
 
 **Start:** extracted functions. **Purpose:** define expectations before introducing bugs.
 
@@ -205,7 +216,7 @@ Commit the tests so the next exercise has a known passing checkpoint.
 
 **Break: 10 minutes.**
 
-### Ex 4 — Catch deliberate regressions (20 minutes)
+### Ex 4 — Catch deliberate regressions 
 
 **Start:** passing Ex 3 tests. **Purpose:** show whether tests detect the incident.
 
@@ -223,7 +234,7 @@ Commit the tests so the next exercise has a known passing checkpoint.
 improved tests; discard the deliberate implementation changes. The size or direction of an
 AUC change is not a required outcome of these mutations.
 
-### Ex 5 — Decide and test invalid-input behavior (20 minutes)
+### Ex 5 — Decide and test invalid-input behavior 
 
 **Start:** restored implementation. **Purpose:** make a behavior change explicit and testable.
 
@@ -232,7 +243,8 @@ Choose one policy: reject input containing a negative quantity, or exclude inval
 before aggregation. Describe the reason and what a caller should observe. Decide what
 happens when all rows are invalid. Keep this decision distinct from Ex 2's refactor.
 
-1. Write the expected behavior in `notes/session-03.md`.
+1. Write the expected behavior in 
+otes/session-03.md`.
 2. Replace `test_negative_quantity_policy` with tests for that decision and normal orders.
    Show the failing result before changing production code.
 3. Implement the policy in `prepare_orders`. Run the completed data-processing tests:
@@ -246,7 +258,7 @@ aggregation still passes. If the real project data contains such rows, record an
 change from baseline metrics and trace it to this policy. If it contains none, unchanged
 metrics remain the expected comparison. Commit this decision separately from extraction.
 
-### Ex 6 — Integrate the runner and quality checks (20 minutes)
+### Ex 6 — Integrate the runner and quality checks 
 
 **Start:** completed data-processing tests. **Purpose:** prove the assembled command and automate checks.
 
@@ -271,7 +283,7 @@ metrics remain the expected comparison. Commit this decision separately from ext
 
    Fix formatting locally with `uv run --locked ruff format .`, review the diff, and rerun
    the format check. Review any automatic lint fixes before accepting them.
-4. Edit your existing `reproduce.yml` using the requirements. Commit named source, test,
+4. Edit your existing `.github/workflows/reproduce.yml` using the requirements. Commit named source, test,
    configuration, note, and workflow paths, then push your working branch and review your changes.
    Inspect the Actions log. If remote execution is unavailable, record local results and
    mark the remote proof pending rather than calling it verified.
