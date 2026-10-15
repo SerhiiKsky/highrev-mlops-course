@@ -11,20 +11,20 @@ training. Modular code and tests support the [final project rubric](../FINAL_PRO
 This session's exercises and checklist are ungraded learning aids.
 
 Use the separate course checkout to read this brief and receive assets. Implement in your
-private team project, retaining its history and remotes. Do not import the instructor's
+individual exercise project, retaining its history and remotes. Do not import the instructor's
 reference project or install its later-session dependencies. Session 4 will connect the
 functions you write today into a pipeline.
 
 ## Before class
 
-Your team repository should contain its working `baseline.py`, `data/01_raw/customers.csv`,
+Your exercise repository should contain its working `baseline.py`, `data/01_raw/customers.csv`,
 `data/01_raw/orders.csv`, `pyproject.toml`, `uv.lock`, `.python-version`, `.gitignore`, and
 Session 2's `.github/workflows/reproduce.yml`. Ruff should be a locked development tool.
-Confirm `uv sync --locked` and `uv run --locked python baseline.py` work from the team root.
+Confirm `uv sync --locked` and `uv run --locked python baseline.py` work from the project root.
 Resolve missing data or stale locks before extracting code. Preserve your existing raw data.
 
 Commands in this brief use **Git Bash on Windows, or a POSIX shell on macOS/Linux**, from
-the team repository root unless stated. Python/uv commands also work in PowerShell; the
+the exercise repository root unless stated. Python/uv commands also work in PowerShell; the
 copy and shell-variable examples use Bash. Close another active virtual environment first.
 
 The teacher's opening uses the ASI 3 deck and Examples 1 to 3: a regression dependency
@@ -74,8 +74,10 @@ normalization helper at module scope so the saved model can find it on reload.
 
 The teacher introduction and demonstration take at most 30 minutes. The six practical
 blocks below take 130 minutes, with a 10-minute break after Ex 3 and a 10-minute wrap-up:
-180 minutes in total. Work independently on an agreed team branch; coordinate file ownership
-and review with teammates. Record your own reasoning, including when working together.
+180 minutes in total. All six exercises are individual. Use your own working copy
+and branch; implement every component, write your own tests, and record your own
+runs and reasoning. Ask the instructor for help when blocked. Timing is a guide:
+prioritize the core behaviors and record any unfinished work before Session 4.
 
 ### Ex 1 — Map responsibilities and save the baseline (15 minutes)
 
@@ -107,7 +109,7 @@ Keep `baseline.py` as the comparison until the modular command works.
 **Start:** Ex 1's baseline and the supplied skeleton. **Purpose:** make behavior importable.
 
 1. Update your separate course checkout. Copy the named starter trees using the inventory.
-   For sibling checkouts, these Bash commands run from the **team root**:
+   For sibling checkouts, these Bash commands run from the **project root**:
 
    ```bash
    lesson_assets=../highrev-mlops-course/sessions/03_modularization
@@ -134,7 +136,7 @@ Keep `baseline.py` as the comparison until the modular command works.
    uv run --locked python -c "import highrev; print(highrev.__file__)"
    ```
 
-   The import should resolve to your team's `src/highrev/__init__.py`. Review the lockfile
+   The import should resolve to your `src/highrev/__init__.py`. Review the lockfile
    diff. If runtime packages changed, rerun the unchanged baseline under the resulting lock
    before comparing the refactor. Do not add Kedro or MLflow yet.
 4. Implement the transformation contracts from your own baseline:
@@ -270,7 +272,7 @@ metrics remain the expected comparison. Commit this decision separately from ext
    Fix formatting locally with `uv run --locked ruff format .`, review the diff, and rerun
    the format check. Review any automatic lint fixes before accepting them.
 4. Edit your existing `reproduce.yml` using the requirements. Commit named source, test,
-   configuration, note, and workflow paths, then push the working branch for team review.
+   configuration, note, and workflow paths, then push your working branch and review your changes.
    Inspect the Actions log. If remote execution is unavailable, record local results and
    mark the remote proof pending rather than calling it verified.
 
@@ -286,7 +288,7 @@ README to name `uv sync --locked` and `uv run --locked python -m highrev` as the
 | Ex 1 | Baseline runs under the existing lock | Repair missing data or Session 2 environment first. |
 | Ex 2, before implementation | Calls to stubs raise `NotImplementedError` | This is unfinished work, not a passing application. |
 | Ex 2, after extraction | Command metrics match the same locked baseline | Compare row counts, IDs, feature columns, split, and settings before changing tolerances. |
-| Package import | Path points to your team's `src/highrev` | Check build-system settings, remove `package = false`, and run `uv sync --locked`. |
+| Package import | Path points to your `src/highrev` | Check build-system settings, remove `package = false`, and run `uv sync --locked`. |
 | Ex 3 | Focused completed tests pass | Preserve leading zeros; locate fixture paths relative to the test file; inspect expected values. |
 | Ex 4 | Each intentional bug fails a relevant existing test; restoration passes | Use a non-whole-year age and exact threshold equality rather than random inputs. |
 | Ex 5 | Normal inputs and explicit invalid-input policy pass | Check whether invalid rows are handled before aggregation. |
@@ -310,7 +312,7 @@ passing behavior tests, and a locked environment. If unfinished, complete extrac
 the age/threshold/aggregation tests first, then integration and the workflow. Tell the
 instructor which checkpoint remains open; do not copy a completed solution to hide it.
 
-Optional individual preparation is ungraded and stays outside the team repository: sketch
+Optional individual preparation is ungraded and stays outside the exercise repository: sketch
 the dependency graph of your functions and consider where file paths and parameters should
 live when a pipeline orchestrator takes over. Compare the role of a Python function and a
 pipeline node. No separate homework submission is required.

@@ -3,13 +3,13 @@
 Start with [the session brief](../03-modularization-and-tests.md). These assets contain
 interfaces, tiny input data, and unfinished tests. The functions and tests deliberately
 raise `NotImplementedError`: a collected test suite is not yet a working implementation.
-Write your own transformation bodies and assertions using your team's Session 2 baseline
+Write your own transformation bodies and assertions using your Session 2 baseline
 and the documented contracts. No model, completed assertions, or solution notebook is supplied.
 
 ## What to copy
 
 All source paths below are relative to the **course checkout**. All destinations are
-relative to the **private team project**. Update the course checkout before copying.
+relative to the **individual exercise project**. Update the course checkout before copying.
 
 | Source under `sessions/03_modularization/` | Destination | Purpose |
 |---|---|---|
@@ -40,4 +40,4 @@ fixture for unit tests and use the existing project CSVs for the integration exe
 
 Do not replace your project's raw CSVs with these fixtures. Keep `baseline.py` available
 as the comparison until the extracted command works. Course materials stay in the course
-checkout; your implementation, tests, decisions, and workflow belong in the team project.
+checkout; your implementation, tests, decisions, and workflow belong in the exercise project.

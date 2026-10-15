@@ -1,4 +1,4 @@
-"""Exercise 2: extract transformations from your team's baseline.py.
+"""Exercise 2: extract transformations from your baseline.py.
 
 All public functions return a new DataFrame and leave their inputs unchanged.
 Keep file access and model training outside this module.

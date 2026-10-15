@@ -1,4 +1,4 @@
-# Merge these tables into the TEAM project's existing pyproject.toml.
+# Merge these tables into the student's exercise project's existing pyproject.toml.
 # This file is a fragment, not a replacement project configuration.
 # Keep project metadata, dependency bounds, Python constraints, and Ruff settings.
 # If a table already exists, merge its keys instead of duplicating its header.

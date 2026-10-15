@@ -1,6 +1,6 @@
 # Session 03: contracts and evidence
 
-Complete this record in `notes/session-03.md` in your team repository. It is an ungraded
+Complete this record in `notes/session-03.md` in your exercise repository. It is an ungraded
 working aid. Record observations from your own runs; do not turn predictions into evidence.
 
 ## Ex 1 — Map responsibilities and save the baseline
@@ -66,5 +66,5 @@ working aid. Record observations from your own runs; do not turn predictions int
 - Integration command / result / artifact location:
 - Baseline comparison after all changes:
 - Workflow step order and run URL, or explicitly local-only evidence:
-- Commit / PR and reviewer:
+- My commit / PR and self-review observations:
 - Remaining limitations and Session 4 recovery work:

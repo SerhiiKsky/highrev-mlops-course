@@ -2,7 +2,7 @@
 
 
 def main() -> None:
-    """Run from the team project root.
+    """Run from the exercise project root.
 
     Read data/01_raw/customers.csv and orders.csv with string customer IDs.
     Call preparation, labeling, splitting, training, and evaluation functions.

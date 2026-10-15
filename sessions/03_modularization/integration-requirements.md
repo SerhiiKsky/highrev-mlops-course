@@ -34,7 +34,7 @@ you have actually opened its run log; local tests prove only the local path.
 
 ## Extend your Session 2 workflow
 
-Edit `.github/workflows/reproduce.yml` already present in your team repository. Keep its
+Edit `.github/workflows/reproduce.yml` already present in your exercise repository. Keep its
 checkout, uv setup, locked installation, and version-recording steps. Use your existing
 action versions; this exercise does not ask you to upgrade them.
 
@@ -50,7 +50,7 @@ Do not suppress failures with `continue-on-error`, `|| true`, skipped assertions
 empty suite. The format check must check, rather than edit, runner files. Confirm pytest
 is installed from the development group. Explain why the cheap checks precede training.
 Commit the workflow edit together with the completed implementation and current lockfile,
-then open a review in the team repository and inspect the run. If Actions is unavailable,
+then review your committed changes and inspect the run. If Actions is unavailable,
 run the same commands locally, save that evidence, and record the remote check as pending.
 
 No completed workflow is supplied: writing these steps and interpreting their failures
