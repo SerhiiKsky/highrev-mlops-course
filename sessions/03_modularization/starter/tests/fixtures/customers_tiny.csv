@@ -1,0 +1,7 @@
+customerID,gender,birthdate,user_agent,ip_address,campaign,ip_address_country
+001,F,1993/2/29,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML like Gecko) Chrome/120.0.0.0 Safari/537.36,192.0.2.1,False,Poland
+002,M,1947/2/29,Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/120.0,192.0.2.2,True,Germany
+003,M,1965/2/29,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML like Gecko) Chrome/120.0.0.0 Safari/537.36,192.0.2.3,False,Poland
+004,F,1900/01/01,Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/120.0,192.0.2.4,False,France
+005,F,2000/01/01,Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML like Gecko) Chrome/120.0.0.0 Safari/537.36,192.0.2.5,True,Germany
+006,F,1990/01/01,Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/120.0,192.0.2.6,False,Poland

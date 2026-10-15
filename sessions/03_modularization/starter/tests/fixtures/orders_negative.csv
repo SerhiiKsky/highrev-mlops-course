@@ -1,0 +1,3 @@
+order_date,pages_visited,order_id,customer_id,tshirt_category,tshirt_price,tshirt_quantity
+2020/07/02,4,N-001,001,Black T-Shirt F,50,2
+2020/07/03,2,N-002,001,Black T-Shirt F,50,-1

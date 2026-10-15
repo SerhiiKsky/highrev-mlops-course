@@ -1,0 +1,7 @@
+order_date,pages_visited,order_id,customer_id,tshirt_category,tshirt_price,tshirt_quantity
+2020/07/02,4,A-001,001,Bl Tshirt F,50,2
+2020/07/04,8,A-002,001,Wh Tshirt F,100,2
+2020/07/02,3,B-001,002,Black T-Shirt M,299,1
+2020/07/02,5,C-001,003,White T-Shirt M,301,1
+2020/07/02,2,D-001,004,Black T-Shirt F,20,1
+2020/07/02,6,E-001,005,White T-Shirt F,20,1

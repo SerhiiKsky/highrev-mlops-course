@@ -1,0 +1,16 @@
+# Merge these tables into the TEAM project's existing pyproject.toml.
+# This file is a fragment, not a replacement project configuration.
+# Keep project metadata, dependency bounds, Python constraints, and Ruff settings.
+# If a table already exists, merge its keys instead of duplicating its header.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["highrev*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
