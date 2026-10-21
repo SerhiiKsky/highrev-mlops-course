@@ -132,7 +132,7 @@ ungraded research and preparation for concepts discussed in class. Briefs appear
 | 1 | Lifecycle, system thinking, and a first container | "The script runs. The score is fine. Now what?" | [posted](sessions/01-introduction.md) |
 | 2 | Reproducible environment | "Works on Alice's laptop, fails on Bob's." | [posted](sessions/02-environment.md) |
 | 3 | Modularization and tests | "A refactor changed predictions without an exception." | [brief](sessions/03-modularization-and-tests.md) |
-| 4 | Pipelines with Kedro | "Nobody knows which cells run in which order." | week 4 |
+| 4 | Pipelines with Kedro | "Nobody knows which cells run in which order." | [brief](sessions/04-pipelines-with-kedro.md) |
 | 5 | Data versioning with DVC | "The commit exists; the training CSV does not." | week 5 |
 | 6 | Experiment tracking and registry with MLflow | "Thirty-seven runs. Which one is in production?" | week 6 |
 | 7 | AutoML | "The best model is too slow and too large to serve." | week 7 |

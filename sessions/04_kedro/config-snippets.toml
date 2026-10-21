@@ -1,0 +1,8 @@
+# Merge this new table into the existing pyproject.toml. Keep your build backend,
+# package discovery, existing runtime dependencies, Ruff, and pytest settings.
+# Add the exact rehearsal versions via uv add as shown in the brief.
+[tool.kedro]
+package_name = "highrev"
+project_name = "HighRev"
+kedro_init_version = "1.7.0"
+source_dir = "src"

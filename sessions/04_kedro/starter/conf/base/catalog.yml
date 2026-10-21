@@ -1,0 +1,32 @@
+orders:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/orders.csv
+  load_args:
+    encoding: utf-8
+    dtype: {customer_id: str}
+
+customers:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/customers.csv
+  load_args:
+    encoding: utf-8
+    dtype: {customerID: str}
+
+orders_by_customer:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/orders_by_customer.parquet
+
+customers_labeled:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/customers_labeled.parquet
+
+classifier:
+  type: pickle.PickleDataset
+  filepath: data/06_models/classifier.pickle
+
+metrics:
+  type: json.JSONDataset
+  filepath: data/08_reporting/metrics.json
+
+# customers_prepared, train_set, test_set use implicit MemoryDataset instances.
+# Their values do not survive a separate CLI invocation.

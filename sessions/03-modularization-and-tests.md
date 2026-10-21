@@ -1,4 +1,4 @@
-﻿# Session 03: Modularization and testing
+﻿ # Session 03: Modularization and testing
 
 **Incident.** A refactor changes the age feature from fractional years to whole years.
 The script still trains, prints metrics, and saves a model. Which check would show that
