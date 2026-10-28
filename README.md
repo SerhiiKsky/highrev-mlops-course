@@ -106,14 +106,15 @@ The full project this course builds is laid out below. The starter has the first
 
 | Piece | In the starter | Arrives in | Replaces |
 |---|---|---|---|
-| `data/01_raw/*.csv` | yes, committed to Git | session 5 moves it to DVC | data that only exists on one laptop |
+| `data/01_raw/*.csv` | yes, committed to Git | session 5 moves exercise-project inputs to DVC | data that only exists on one laptop |
 | `baseline.py` | yes, one script | session 3 splits it into `src/highrev/` | notebook code nobody can test |
 | `sessions/01_intro/`: notebook, `api.py`, `Dockerfile` on a toy regression | yes, as a preview of sessions 8 and 9 | the HighRev versions arrive in sessions 8 and 9 | a pickle only its author can call |
 | `pyproject.toml`, `uv.lock`, `.python-version` | no | session 2 | `pip install` and hope |
 | `tests/unit`, `tests/integration`, ruff | no | session 3 | "nothing crashed, so it's fine" |
 | `conf/base/catalog.yml`, `parameters.yml`, Kedro pipelines | no | session 4 | hard-coded paths and constants |
 | `data/01_raw.dvc`, `.dvc/` | no | session 5 | 3 MB of CSV in every commit |
-| `src/highrev/tracking.py`, MLflow registry, champion alias, quality gate | no | session 6 | metrics printed to a terminal |
+| `src/highrev/track_run.py`, MLflow runs and provenance | no | session 5 | metrics printed to a terminal |
+| MLflow registry, champion alias, quality gate | no | session 6 | a model without a promotion decision |
 | AutoML protocol (PyCaret, AutoGluon) | no | session 7 | one hand-tuned model |
 | `src/highrev/serving/api.py`, `ui.py` | no | session 8 | a pickle and a Slack message |
 | `Dockerfile`, `compose.yaml` | no | session 9 | "works on my machine" |
@@ -133,8 +134,8 @@ ungraded research and preparation for concepts discussed in class. Briefs appear
 | 2 | Reproducible environment | "Works on Alice's laptop, fails on Bob's." | [posted](sessions/02-environment.md) |
 | 3 | Modularization and tests | "A refactor changed predictions without an exception." | [brief](sessions/03-modularization-and-tests.md) |
 | 4 | Pipelines with Kedro | "Nobody knows which cells run in which order." | [brief](sessions/04-pipelines-with-kedro.md) |
-| 5 | Data versioning with DVC | "The commit exists; the training CSV does not." | week 5 |
-| 6 | Experiment tracking and registry with MLflow | "Thirty-seven runs. Which one is in production?" | week 6 |
+| 5 | Data versioning and experiment tracking | "Which data and settings produced this model?" | [brief](sessions/05-data-versioning-and-tracking.md) |
+| 6 | Model registry and promotion with MLflow | "Thirty-seven runs. Which one is in production?" | week 6 |
 | 7 | AutoML | "The best model is too slow and too large to serve." | week 7 |
 | 8 | Serving with FastAPI | "A backend engineer asks for the prediction contract." | week 8 |
 | 9 | Docker | "The endpoint works locally, not on the host." | week 9 |
@@ -160,3 +161,11 @@ GitHub story. There are no separate homework, lab-checklist, or session grades.
   number. Fixes to course files arrive through the weekly drop.
 - Decks and readings from the earlier ASI course are referenced by module number in each
   brief; they are not part of this repository.
+
+## Prepared Session 05
+
+Continue your individual Session 04 exercise project with the
+[Session 05 brief](sessions/05-data-versioning-and-tracking.md) and
+[supplied integration pieces](sessions/05_tracking/README.md). Keep this course
+checkout unchanged while completing exercises; the example CSVs here remain
+available as course inputs. DVC migration happens in your exercise repository.

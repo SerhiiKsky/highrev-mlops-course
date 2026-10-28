@@ -1,0 +1,20 @@
+# Merge into your exercise .gitignore; do not replace existing rules.
+# Avoid a broad data/ rule: DVC must be able to create data/01_raw.dvc.
+data/01_raw/
+data/02_intermediate/
+data/03_primary/
+data/06_models/
+data/08_reporting/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+mlflow.db*
+mlruns/
+mlartifacts/
+.lesson05/
+.viz/
+logs/
+# DVC init writes its own .dvc/.gitignore for cache and config.local.
