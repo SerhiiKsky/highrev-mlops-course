@@ -1,0 +1,21 @@
+# STUDENT TODO K2: replace every FILL_ME using the integration contracts.
+# Copy into conf/pizza; Kedro overlays this environment on the existing base.
+pizza_orders:
+  type: FILL_ME
+  filepath: FILL_ME
+
+pizza_restaurants:
+  type: FILL_ME
+  filepath: FILL_ME
+
+pizza_results:
+  type: FILL_ME
+  filepath: FILL_ME
+  save_args:
+    index: false
+
+pizza_models:
+  type: FILL_ME
+  filepath: FILL_ME
+
+# pizza_features and pizza_split are implicit MemoryDataset intermediates.

@@ -1,0 +1,14 @@
+# Pizza environment controls. Wire them into nodes using params: inputs.
+pizza_settings:
+  c_values: [0.05, 0.5, 5.0]
+  thresholds: [0.20, 0.35, 0.50, 0.65, 0.80]
+  test_size: 0.20
+  validation_fraction_of_remaining: 0.25
+  split_seed: 42
+  max_iter: 800
+
+# The adapter replaces this whole mapping for a one-candidate recovery run.
+pizza_selection:
+  mode: search
+  c: 0.5
+  threshold: 0.5

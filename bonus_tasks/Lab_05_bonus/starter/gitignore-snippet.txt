@@ -1,0 +1,11 @@
+# Merge into the existing .gitignore before committing your bonus implementation.
+# Raw CSVs are ignored by DVC's data/.gitignore when you run dvc add.
+/.venv/
+**/__pycache__/
+/mlflow.db*
+/mlruns/
+/mlartifacts/
+/data/06_models/
+/data/08_reporting/
+/logs/
+/build/
