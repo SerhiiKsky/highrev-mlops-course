@@ -1,6 +1,6 @@
 # Session 4 — Pipelines with Kedro
 
-**Week 4 · 180 minutes · Individual practical work**
+**Week 4 · Individual practical work**
 
 > “Nobody knows which cells run in which order.”
 
@@ -17,7 +17,7 @@ You will also add and test your own reporting node.
 Work independently in your **individual exercise repository**, continuing your own
 Session 3 implementation. Keep the course checkout separate; it supplies only the
 named starter files below. The final team project has a separate repository and
-collaboration workflow. Exercises, evidence notes, and this self-check are ungraded.
+collaboration workflow. Exercises, checklist notes, and this self-check are ungraded.
 
 ## Before class
 
@@ -95,24 +95,24 @@ code, environment, parameters, and deterministic behavior of your functions.
 
 ## Lesson route
 
-| Block | Participation | Minutes |
-|---|---|---:|
-| Ex 1 — Sketch the dependencies | Individual | 10 |
-| Opening demonstration: functions, nodes, catalog, registry | Instructor | 20 |
-| Ex 2 — Bootstrap Kedro, configuration, and catalog | Individual | 20 |
-| Ex 3 — Wire the existing functions | Individual | 30 |
-| Break | Everyone | 10 |
-| Ex 4 — Inspect and select pipelines | Individual | 25 |
-| Ex 5 — Add and test class balance reporting | Individual | 30 |
-| Ex 6 — Change a parameter and reproduce the result | Individual | 25 |
-| Wrap-up and Session 5 handoff | Everyone | 10 |
+| Block | Participation |
+|---|---|
+| Ex 1 — Sketch the dependencies | Individual |
+| Opening demonstration: functions, nodes, catalog, registry | Instructor |
+| Ex 2 — Bootstrap Kedro, configuration, and catalog | Individual |
+| Ex 3 — Wire the existing functions | Individual |
+| Break | Everyone |
+| Ex 4 — Inspect and select pipelines | Individual |
+| Ex 5 — Add and test class balance reporting | Individual |
+| Ex 6 — Change a parameter and reproduce the result | Individual |
+| Wrap-up and Session 5 handoff | Everyone |
 
 ### Ex 1 — Sketch the dependencies
 
 **Purpose:** identify what must exist before each operation can run. **Start:** your
-working Session 3 modules. **Time:** 10 minutes, individual.
+working Session 3 modules.
 
-1. Copy [the evidence template](04_kedro/pipeline-evidence.md) to
+1. Copy [the checklist](04_kedro/pipeline-checklist.md) to
    `notes/session-04.md` in your exercise project. Fill in your starting commit,
    data identity, and baseline metrics from the readiness run.
 2. Sketch the graph from raw orders and customers through aggregation, customer
@@ -122,14 +122,14 @@ working Session 3 modules. **Time:** 10 minutes, individual.
 4. Predict whether fitting can start before the split, and whether evaluating can
    start before fitting. Explain each answer using an input dependency.
 
-**Check and keep:** your own sketch and reasoning in the evidence note. There is no
-code to change yet. During the 20-minute demonstration, compare your sketch with the
+**Check and keep:** your own sketch and reasoning in the checklist. There is no
+code to change yet. During the demonstration, compare your sketch with the
 displayed graph and revise any missing dependency.
 
 ### Ex 2 — Bootstrap Kedro, configuration, and catalog
 
 **Purpose:** give Kedro a project, configuration, and storage boundary. **Start:** Ex 1
-and a working Session 3 package. **Time:** 20 minutes, individual.
+and a working Session 3 package.
 
 1. Copy only the required files listed in [the asset inventory](04_kedro/README.md), from the
    course checkout to their exact destinations. Leave the optional integration
@@ -181,7 +181,7 @@ can still fail with `NotImplementedError`. Keep source/configuration and lock ch
 ### Ex 3 — Wire the existing functions
 
 **Purpose:** express the dependency graph while preserving tested behavior. **Start:**
-Ex 2, your Session 3 functions, and the pipeline/registry stubs. **Time:** 30 minutes.
+Ex 2, your Session 3 functions, and the pipeline/registry stubs.
 
 Implement `create_pipeline()` in the two pipeline modules. Import and wrap your
 existing functions; move no business logic into pipeline definitions. Use the names
@@ -220,12 +220,12 @@ generated model and data files remain ignored. Reporting and its unit tests belo
 to Ex 5; new integration tests are an optional Ex 6 extension and have not yet
 been copied into your exercise repository.
 
-**Break: 10 minutes.**
+**Break.**
 
 ### Ex 4 — Inspect and select pipelines
 
 **Purpose:** discover which inputs a selected graph needs in a fresh process.
-**Start:** a successful Ex 3 full run. **Time:** 25 minutes, individual.
+**Start:** a successful Ex 3 full run.
 
 1. Inspect the graph in your pipeline definitions and registry. If the optional
    visualization dependency is available, install and launch it:
@@ -271,7 +271,7 @@ the difference between selecting `modeling` and starting at `train_model`.
 ### Ex 5 — Add and test class balance reporting
 
 **Purpose:** extend the graph with useful behavior and prove the assembled pipeline
-works. **Start:** Ex 4 recovery complete. **Time:** 30 minutes, individual.
+works. **Start:** Ex 4 recovery complete.
 
 1. Implement `report_class_balance(customers_labeled)` in `highrev/reporting.py`.
    Its `high_revenue` column must contain non-null boolean labels only. Return a
@@ -310,7 +310,7 @@ and CI should continue to pass.
 
 **Purpose:** distinguish a new target definition from a model improvement and
 record the conditions needed to reproduce a run. **Start:** a full default run
-including reporting and passing Ex 5 checks. **Time:** 25 minutes, individual.
+including reporting and passing Ex 5 checks.
 
 1. Save the current metrics and class-balance values in `notes/session-04.md`
    **before** the next run overwrites their files. Record code commit, data identity,

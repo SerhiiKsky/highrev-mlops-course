@@ -1,4 +1,4 @@
-# Session 03: contracts and evidence
+# Session 03: contracts checklist
 
 Complete this record in `notes/session-03.md` in your exercise repository. It is an ungraded
 working aid. Record observations from your own runs; do not turn predictions into evidence.

@@ -5,13 +5,7 @@ HighRev exercise project from Session 3. These assets supply configuration,
 package scaffolding, function contracts, and test requirements. You implement
 the graph, validation, reporting, model configuration, and assertions.
 
-The complete guided implementation takes **240 minutes, including two ten-minute
-breaks**. In the compact 180-minute delivery, the instructor walks through model
-variants and environment overrides while students complete essential validation
-and integration work. Independent implementation of unfinished variants continues
-in the next supervised period. Record unfinished checkpoints honestly; the
-shorter delivery does not remove required integration checks. Exercises and
-this evidence record are ungraded individual work.
+The instructor walks through model variants and environment overrides while students complete essential validation and integration work. Independent implementation of unfinished variants continues in the next supervised period. Record unfinished checkpoints honestly. Exercises and this checklist are ungraded individual work.
 
 ## Copy assets when their exercise starts
 
@@ -24,7 +18,7 @@ fail until implemented and must enter test discovery at their stated exercise.
 
 | When | Supplied asset | Exact destination | Purpose |
 |---|---|---|---|
-| Ex 1 | [pipeline-evidence.md](pipeline-evidence.md) | `notes/session-04.md` | Record observations across all eight exercises. |
+| Ex 1 | [pipeline-checklist.md](pipeline-checklist.md) | `notes/session-04.md` | Record observations across all eight exercises. |
 | Ex 2 | [config-snippets.toml](config-snippets.toml) | Merge into `pyproject.toml` | Add Kedro metadata; retain build, dependencies, package discovery, Ruff, and pytest settings. |
 | Ex 2 | [settings.py](starter/src/highrev/settings.py) | `src/highrev/settings.py` | Explicit base/local environments and soft merging of nested parameters. |
 | Ex 2 | [pipeline_registry.py](starter/src/highrev/pipeline_registry.py) | `src/highrev/pipeline_registry.py` | Ex 3 registration scaffold; extend with `comparison` in Ex 6. |

@@ -1,15 +1,11 @@
-﻿# Session 4 — My pipeline evidence
+﻿# Session 4 — My pipeline checklist
 
 Copy to `notes/session-04.md` in your individual exercise project. Replace prompts
 with your own observations. This is an ungraded learning record. Distinguish
 predictions, observed results, instructor demonstrations, and pending work.
 Do not include credentials or full customer records.
 
-Record outputs before another run overwrites them. The guided route takes
-240 minutes including two ten-minute breaks. In the compact 180-minute route,
-mark variant/environment work demonstrated by the instructor separately from
-your own implementation; continue unfinished independent variants in the next
-supervised period. Validation and required integration checks remain essential.
+Record outputs before another run overwrites them. Mark variant/environment work demonstrated by the instructor separately from your own implementation; continue unfinished independent variants in the next supervised period. Validation and required integration checks remain essential.
 
 ## Starting point
 

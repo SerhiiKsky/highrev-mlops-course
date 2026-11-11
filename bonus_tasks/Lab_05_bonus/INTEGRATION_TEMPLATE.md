@@ -1,7 +1,7 @@
 # Pizza Panic integration worksheet
 
 Complete four code/configuration tasks in a clone of your completed Session 05
-project, then record your choices in the evidence template.
+project, then record your choices in the checklist.
 
 ## Copy map
 

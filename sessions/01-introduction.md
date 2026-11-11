@@ -175,7 +175,7 @@ docker build -t intro-regression:session01 .
 docker run --rm --name intro-regression -p 127.0.0.1:8000:8000 intro-regression:session01
 ```
 
-The final dot sets the current directory as the build context: the files Docker can copy. The first build may take a few minutes. Leave the container running.
+The final dot sets the current directory as the build context: the files Docker can copy. Leave the container running.
 
 Uvicorn listens on `0.0.0.0:8000` inside the container. The `-p` option makes it available at `127.0.0.1:8000` on your machine. `EXPOSE` in the Dockerfile documents the port; it does not publish it.
 

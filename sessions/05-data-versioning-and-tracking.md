@@ -6,7 +6,7 @@ A teammate says last week's HighRev model had a higher ROC AUC. The pipeline
 still runs, and the code is in Git, but the team cannot establish which data
 and settings produced that score. Your job is to assemble the evidence needed
 to investigate. Each exercise supplies a piece of the puzzle; keep your own
-observations on the [evidence board](05_tracking/evidence-board.md).
+observations on the [checklist](05_tracking/checklist.md).
 
 By the end you can identify the code, raw data, configuration, metrics and model
 associated with a run; retrieve a previous dataset in a separate clone; compare
@@ -62,18 +62,18 @@ choice, a metric a measured result, a tag identifies context, and an artifact
 is a produced object such as a classifier or report. Tracking training runs is
 not monitoring a deployed service.
 
-The 210-minute class includes a 10-minute break after Ex 3. The instructor demonstrates;
+The instructor demonstrates;
 you carry out each checkpoint individually in your exercise repository.
 
 ## Ex 1 — Find missing evidence
 
 **Purpose:** understand the incident before adding tools. **Start:** working
-Session 04 pipeline. **Time:** 30 minutes including recall and discussion.
+Session 04 pipeline.
 
 1. Inspect the catalog, `conf/base/parameters.yml`, pipeline graph, and your
    last model and metrics. Identify the two raw files, split settings, seed,
    model configuration and saved outputs.
-2. Copy the [evidence board](05_tracking/evidence-board.md) to
+2. Copy the [checklist](05_tracking/checklist.md) to
    `notes/session-05.md` or keep a separate scratch copy. List what is missing
    when a colleague has only a Git commit and a reported score.
 3. Explain why the current terminal output and saved model do not uniquely
@@ -85,7 +85,7 @@ data, effective configuration, environment and result as evidence needed.
 ## Ex 2 — Version/publish V1
 
 **Purpose:** give the current raw data a recoverable identity. **Start:** Ex 1;
-Git project with the raw files present. **Time:** 40 minutes, live-along.
+Git project with the raw files present.
 
 1. Inspect `git status --short` and `git ls-files -- data/01_raw`. Preserve any
    existing work. If the raw files are tracked by Git, remove **only their Git
@@ -147,7 +147,7 @@ objects cannot recover lost data. Keep the remote for later steps.
 ## Ex 3 — Restore V1 in independent clone
 
 **Purpose:** test retrieval without depending on the original cache. **Start:**
-V1 committed and pushed. **Time:** 20 minutes, individual.
+V1 committed and pushed.
 
 1. Record the V1 commit and the SHA-256 of each original CSV. Clone your local
    exercise repository into a new sibling path; do not clone into the project
@@ -180,8 +180,7 @@ backup or a full software/environment reproduction.
 ## Ex 4 — Connect MLflow
 
 **Purpose:** record what the existing pipeline did, without changing its nodes.
-**Start:** Ex 3 complete; work in the original exercise project. **Time:** 50
-minutes including MLflow concepts and instructor demonstration.
+**Start:** Ex 3 complete; work in the original exercise project.
 
 **Hard stop before the first tracking command:** the V1 DVC pointer must be
 committed to Git, the V1 objects must have been pushed to the configured DVC
@@ -244,7 +243,7 @@ used. The metric and model appear in the run, not just in terminal output.
 ## Ex 5 — Compare A/B/C
 
 **Purpose:** interpret a controlled comparison. **Start:** A recorded; same
-clean commit and V1 data still selected. **Time:** 25 minutes.
+clean commit and V1 data still selected.
 
 | Run | Data | Model configuration | Comparison question |
 | --- | --- | --- | --- |
@@ -294,8 +293,7 @@ contain the V2 pointer. Note all other changed commit contents honestly.
 ## Ex 6 — Reproduce a run and inspect failure
 
 **Purpose:** follow the evidence backward and distinguish failed execution
-from a successful run. **Start:** A/B/C recorded, V1 and V2 pushed. **Time:**
-35 minutes including exit ticket.
+from a successful run. **Start:** A/B/C recorded, V1 and V2 pushed.
 
 1. Choose A. Inspect its run ID, `git.commit`, `dvc.data_hash`, effective
    configuration, environment and metric. In the independent clone, select
@@ -349,7 +347,7 @@ from a successful run. **Start:** A/B/C recorded, V1 and V2 pushed. **Time:**
    the corresponding run status and error; restore the input immediately with
    DVC and verify a subsequent normal run. An unrelated setup failure before
    the run starts does not prove failed-run tracking. Never remove the remote.
-3. Answer the three questions at the end of the evidence board. Save your notes
+3. Answer the three questions at the end of the checklist. Save your notes
    and commit them only after finishing the controlled A/B comparison.
 
 **Check:** the run commit and data reference lead to recoverable inputs; the

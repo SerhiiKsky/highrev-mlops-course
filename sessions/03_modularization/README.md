@@ -24,7 +24,7 @@ relative to the **individual exercise project**. Update the course checkout befo
 | [`starter/tests/fixtures/orders_tiny.csv`](starter/tests/fixtures/orders_tiny.csv) | `tests/fixtures/orders_tiny.csv` | Repeat customers, aggregation, threshold cases |
 | [`starter/tests/fixtures/customers_tiny.csv`](starter/tests/fixtures/customers_tiny.csv) | `tests/fixtures/customers_tiny.csv` | Date repairs, fractional age, old/unmatched customers |
 | [`starter/tests/fixtures/orders_negative.csv`](starter/tests/fixtures/orders_negative.csv) | `tests/fixtures/orders_negative.csv` | One valid and one negative quantity for the same customer |
-| [`contracts-and-evidence.md`](contracts-and-evidence.md) | `notes/session-03.md` | Blank decision and observation record |
+| [`contracts-checklist.md`](contracts-checklist.md) | `notes/session-03.md` | Blank decision and observation record |
 | [`pre-commit-config.yaml`](pre-commit-config.yaml) | `.pre-commit-config.yaml` | Ruff lint/format checks on staged Python files before each commit |
 | [`config-snippets.toml`](config-snippets.toml) | Merge into `pyproject.toml` | Install `src/highrev` and configure test discovery |
 | [`integration-requirements.md`](integration-requirements.md) | Read in the course checkout | Requirements for tests and workflow edits |

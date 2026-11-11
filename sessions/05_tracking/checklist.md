@@ -1,4 +1,4 @@
-# Session 05 evidence board
+# Session 05 checklist
 
 Fill this in with your own observations. A value or run ID is evidence only
 when you can say where it came from and what it proves.

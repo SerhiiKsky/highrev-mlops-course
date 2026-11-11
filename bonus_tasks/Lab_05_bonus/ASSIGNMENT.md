@@ -18,7 +18,7 @@ integrate it into Kedro and explain what it tells you.**
 | Catalog skeleton and complete parameter values | **K2:** fill catalog types/paths and wire parameter inputs |
 | Integration worksheet with function contracts | **K3:** register a named `pizza_panic` pipeline |
 | Adapter importing your completed Session 05 logging functions | **K4:** execute your named pipeline through its Kedro session |
-| [Evidence template](EVIDENCE_TEMPLATE.md) | Fill the tables, observations, recommendation and recovery evidence |
+| [Checklist](CHECKLIST.md) | Fill the tables, observations, recommendation and recovery evidence |
 
 This synthetic dataset uses the supplied `late` target, not HighRev's
 `high_revenue` target. Keep the supplied experiment logic and settings. Your
@@ -200,7 +200,7 @@ using `--port 5001`. Keep both databases and artifacts until grading.
 ## Submit
 
 - Your committed bonus repository or Git bundle and exact commit SHA.
-- Your filled [evidence template](EVIDENCE_TEMPLATE.md), including candidate
+- Your filled [checklist](CHECKLIST.md), including candidate
   comparison, plot, recommendation and fresh-clone recovery evidence.
 - A graph screenshot or execution log showing the three Kedro nodes, supported
   by the source/catalog/registry changes in your submission.

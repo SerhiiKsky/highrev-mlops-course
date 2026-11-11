@@ -13,7 +13,7 @@ pipeline, configuration, or functions.
 | [inspect_run.py](starter/tools/inspect_run.py) | `tools/inspect_run.py` | Print run evidence as JSON, optionally comparing another run, including across tracking stores. |
 | [API cards](api-cards.md) | Read from the course checkout | The available MLflow calls and how to use each puzzle piece. |
 | [Ignore snippet](gitignore-snippet.txt) | Merge into `.gitignore` | Keep local tracking stores and generated outputs out of Git. |
-| [Evidence board](evidence-board.md) | `notes/session-05.md` | Your own observations and conclusions. |
+| [Checklist](checklist.md) | `notes/session-05.md` | Your own observations and conclusions. |
 
 Create missing parent directories. Compare existing files before copying and
 merge rather than overwrite your work. Complete and commit the adapter, support

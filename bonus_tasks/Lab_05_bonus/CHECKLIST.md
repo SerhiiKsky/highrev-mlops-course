@@ -1,4 +1,4 @@
-# Pizza Panic — my completed experiment
+# Pizza Panic — experiment checklist
 
 Replace every bracketed prompt. Keep this report outside the project during
 experiments. Attach screenshots/logs rather than pasting long transcripts here.

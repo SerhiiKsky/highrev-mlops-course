@@ -1,4 +1,4 @@
-﻿ # Session 03: Modularization and testing
+ # Session 03: Modularization and testing
 
 **Incident.** A refactor changes the age feature from fractional years to whole years.
 The script still trains, prints metrics, and saves a model. Which check would show that
@@ -38,9 +38,8 @@ destination. It links all required starter files. Also use:
 
 - [Configuration fragment](03_modularization/config-snippets.toml): packaging and pytest
   settings to **merge** into your current `pyproject.toml`.
-- [Blank contract and evidence record](03_modularization/contracts-and-evidence.md): copy
-  to 
-otes/session-03.md` and fill in your own results.
+- [Contract checklist](03_modularization/contracts-checklist.md): copy
+  to `notes/session-03.md` and fill in your own results.
 - [Integration and workflow requirements](03_modularization/integration-requirements.md):
   the required behavior for Ex 6, without an implementation.
 
@@ -73,8 +72,7 @@ normalization helper at module scope so the saved model can find it on reload.
 
 ## In class
 
-The presentation and demo take 30 minutes. An eight-minute GitHub Actions walkthrough
-follows as bonus content. The six individual exercises do in your own pace. All six
+A GitHub Actions walkthrough follows the presentation as bonus content. All six
 exercises are individual. Use your own working copy and branch; implement every
 component, write your own tests, and record your own runs and reasoning. The bonus
 is a guided reading of your existing workflow; it does not require a GitHub account
@@ -127,7 +125,7 @@ Keep `baseline.py` as the comparison until the modular command works.
    mkdir -p src tests notes
    cp -Rn "$lesson_assets/starter/src/highrev" src/
    cp -Rn "$lesson_assets/starter/tests/." tests/
-   cp -n "$lesson_assets/contracts-and-evidence.md" notes/session-03.md
+   cp -n "$lesson_assets/contracts-checklist.md" notes/session-03.md
    ```
 
    Adjust `lesson_assets` if the course checkout is elsewhere. `-n` preserves existing
@@ -214,7 +212,7 @@ floating-point representation requires it, not to accept a whole-year age error.
 fixture test proves that contract on its chosen cases, not model quality on future data.
 Commit the tests so the next exercise has a known passing checkpoint.
 
-**Break: 10 minutes.**
+**Break.**
 
 ### Ex 4 — Catch deliberate regressions 
 
