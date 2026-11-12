@@ -1,0 +1,8 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY --from=ghcr.io/astral-sh/uv:0.8.22 /uv /uvx /bin/
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+COPY lab07 ./lab07
+ENV PATH="/app/.venv/bin:$PATH" OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+ENTRYPOINT ["python", "-m", "lab07.train"]

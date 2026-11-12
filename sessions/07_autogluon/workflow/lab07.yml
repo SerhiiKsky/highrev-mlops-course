@@ -1,0 +1,137 @@
+﻿name: Lab 07 checks and release
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.11
+            3.12
+      - uses: astral-sh/setup-uv@v6
+      - name: Install existing project environment
+        run: uv sync --locked
+      - name: Restore approved private classroom data
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p data/01_raw
+          for name in customers.csv orders.csv; do
+            test -f "ci-data/$name"
+            if [[ -e "data/01_raw/$name" ]]; then
+              cmp -s "ci-data/$name" "data/01_raw/$name" || {
+                echo "Existing raw data differs from the approved CI copy: $name" >&2
+                exit 1
+              }
+            else
+              cp "ci-data/$name" "data/01_raw/$name"
+            fi
+          done
+      - name: Check packaged model input provenance
+        run: uv run --locked python lab07/lab07/verify_provenance.py
+      - name: Preserve project lint and tests
+        run: |
+          uv run --locked ruff check src tests
+          uv run --locked pytest tests -q
+      - name: Run the existing Kedro pipeline
+        run: uv run --locked kedro run
+      - name: Run retained Lab 06 lifecycle tests
+        working-directory: lab06/worker-env
+        run: |
+          uv sync --locked --python 3.11
+          uv run --locked python -m unittest discover -s ../tests -v
+      - name: Check Lab 07 API behavior
+        working-directory: lab07
+        run: |
+          uv sync --locked --python 3.11
+          uv run --locked python -m pytest tests -q
+
+  image:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.identity.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set image identity
+        id: identity
+        shell: bash
+        run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+      - name: Build image from the selected model
+        env:
+          IMAGE: ${{ steps.identity.outputs.image }}
+        run: docker build --build-arg SOURCE_REVISION="$GITHUB_SHA" -t "$IMAGE" lab07
+      - name: Exercise the actual image
+        env:
+          IMAGE: ${{ steps.identity.outputs.image }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name lab07-smoke -p 127.0.0.1:18007:10000 "$IMAGE"
+          trap 'docker logs lab07-smoke; docker rm -f lab07-smoke' EXIT
+          ready=0
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:18007/health > /tmp/lab07-health.json; then ready=1; break; fi
+            sleep 2
+          done
+          test "$ready" = 1
+          python -c 'import json, os; h=json.load(open("/tmp/lab07-health.json")); assert h["status"] == "ready" and h["source_revision"] == os.environ["GITHUB_SHA"]'
+          curl --fail-with-body -sS http://127.0.0.1:18007/predict \
+            -H 'Content-Type: application/json' \
+            -d '{"pages_visited":3,"age_first_order":30,"gender":"F","campaign":true,"ip_address_country":"PL","browser":"Chrome","os":"Windows"}' \
+            > /tmp/lab07-prediction.json
+          python -c 'import json; p=json.load(open("/tmp/lab07-prediction.json")); assert 0 <= p["probability_high_revenue"] <= 1 and p["model_version"]'
+      - name: Sign in to GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - name: Publish exact commit image
+        env:
+          IMAGE: ${{ steps.identity.outputs.image }}
+        run: docker push "$IMAGE"
+
+  deploy:
+    needs: image
+    runs-on: ubuntu-latest
+    environment: render
+    steps:
+      - name: Request deployment of the image just published
+        env:
+          RENDER_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          IMAGE: ${{ needs.image.outputs.image }}
+        shell: bash
+        run: |
+          if [[ -z "$RENDER_HOOK" ]]; then
+            echo 'No deploy hook configured: image published; create the Render service first.'
+            exit 0
+          fi
+          python - <<'PY'
+          import os
+          import urllib.parse
+          import urllib.request
+
+          hook = os.environ['RENDER_HOOK']
+          separator = '&' if '?' in hook else '?'
+          url = hook + separator + urllib.parse.urlencode({'imgURL': os.environ['IMAGE']})
+          request = urllib.request.Request(url, method='POST')
+          try:
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  if response.status not in (200, 202):
+                      raise RuntimeError('Render did not accept deployment')
+                  print('Render accepted the deployment request; inspect Render and smoke-test the live URL.')
+          except Exception:
+              raise SystemExit('Deploy request failed; check hook and Render settings without exposing the secret URL.')
+          PY
