@@ -45,6 +45,12 @@ One prediction test should initially fail because the API has a student TODO. Ot
 
 ## Concepts
 
+For an optional standalone introduction before this applied exercise, see the
+[AutoGluon 101 notebook](07_autogluon/01_autogluon_basics.ipynb) and its
+[setup guide](07_autogluon/AUTOGLUON_101_SETUP.md). It uses a different toy
+dataset and a separate working directory; it is not a substitute for the Lab 06
+comparison or the HighRev deployment below.
+
 A **partition** controls what the candidate may see: fit data trains it, holdout data selects among its options, and validation data evaluates the selected candidate. A **model artifact** is the saved predictor and metadata. **FastAPI** validates JSON and loads the artifact once at startup; the request contains already prepared features, not raw customer/order records. Historical features such as `pages_visited` may not be available when predicting a future customer. This API does not establish a valid future-revenue product.
 
 A **container image** packages the application, locked environment and model. An image tag based on a commit identifies the build, while the model version identifies the artifact. GitHub Actions runs checks and publishes the image; Render runs it as a web service. The deploy hook accepts a request asynchronously, so an accepted hook is not proof of a running service. The full final project needs additional quality gates and lifecycle evidence beyond this lab.

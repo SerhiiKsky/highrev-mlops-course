@@ -1,6 +1,8 @@
 ﻿# Lab 07 assets
 
-Start with the [student lab](../07-autogluon-to-render.md). Copy the entire [starter](starter/) to a new `lab07/` directory in your own exercise repository. It contains the AutoGluon training adapter, seven-feature contract, FastAPI starter with one student TODO, API tests, Linux training and serving Dockerfiles, and isolated dependency specification and lock. It does not contain a trained model. The existing project pipeline, checks, tests, and Lab 06 materials stay in place.
+For an optional standalone introduction, start with the [AutoGluon 101 notebook](01_autogluon_basics.ipynb) and its [separate setup guide](AUTOGLUON_101_SETUP.md). It uses a toy dataset and does not modify the HighRev project.
+
+Start the applied exercise with the [student lab](../07-autogluon-to-render.md). Copy the entire [starter](starter/) to a new `lab07/` directory in your own exercise repository. It contains the AutoGluon training adapter, seven-feature contract, FastAPI starter with one student TODO, API tests, Linux training and serving Dockerfiles, and isolated dependency specification and lock. It does not contain a trained model. The existing project pipeline, checks, tests, and Lab 06 materials stay in place.
 
 Copy [the release workflow](workflow/lab07.yml) to `.github/workflows/lab07.yml` only after reviewing it and ensuring the destination does not already exist. It expects the approved model at `lab07/model/`, the original project commands and lock, and approved copies of `customers.csv` and `orders.csv` at `ci-data/` in the checkout. The workflow copies these into `data/01_raw/` and compares their SHA-256 hashes and the project lock with the model's Lab 06 provenance before running the existing tests and Kedro pipeline. It does not restore data from DVC or independently validate the DVC pointer: retain the pointer and existing local DVC checks in your project. Configure Render's hook as a secret after the first image is published.
 
