@@ -16,3 +16,5 @@ __pycache__/
 # quality checks 
 .ruff_chache
 .venv-*/
+# AutoGluon 101 notebook output (re-created by running the notebook)
+sessions/07_autogluon/autogluon-101-runs/
