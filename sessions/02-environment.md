@@ -20,7 +20,7 @@ configured has been asked to do the same.
 
 This work supports the environment criterion in [FINAL_PROJECT_RUBRIC.md](../FINAL_PROJECT_RUBRIC.md).
 
-Run the coding exercises from your private team project repository. At session 1, copy
+Run the coding exercises from your individual exercise repository. At session 1, copy
 `baseline.py` and `data/` from the separate course checkout into this repository. Keep course
 briefs and labs in the course checkout; do not add it as a remote or merge its history.
 
@@ -171,7 +171,7 @@ repeatable. Everything for Ruff goes in **one** `[tool.ruff]` table: a second
 
 ## A Heavy Dependency: PyCaret
 
-PyCaret compares a dozen models in one call (session 7). It is also one of the heaviest
+PyCaret compares a dozen models in one call (Lab 06). It is also one of the heaviest
 dependencies a project can take on. The instructor demonstrates one request with three
 outcomes:
 
@@ -186,7 +186,7 @@ supports python 3.9, 3.10, 3.11`. Hence Python 3.11 in the third row.
 
 The project environment says pandas 3.0.6; the AutoML environment says pandas 2.1.4. Two
 environments, two answers, each correct for its purpose. Ruff went into the project's `dev`
-group; PyCaret stays out of the project lockfile entirely. Session 7 builds on that rule.
+group; PyCaret stays out of the project lockfile entirely. Lab 06 builds on that rule with its own Python 3.11 worker environment, and Lab 07 does the same for AutoGluon.
 
 **Do not run `uv add pycaret` without a bound in the project.** Ex 6 runs only the second
 row, which downloads metadata, not gigabytes.
@@ -220,7 +220,7 @@ baseline? Every command in it is run by hand in Ex 4 and Ex 5 first.
 
 ## In Class
 
-Commands are for a POSIX shell (Git Bash on Windows), from the team project repository root
+Commands are for a POSIX shell (Git Bash on Windows), from the exercise repository root
 unless stated. Stage files by name; never `git add .` in this session, because `intro/` may
 hold uncommitted session 1 work.
 

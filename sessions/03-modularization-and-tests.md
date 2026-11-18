@@ -77,7 +77,7 @@ exercises are individual. Use your own working copy and branch; implement every
 component, write your own tests, and record your own runs and reasoning. The bonus
 is a guided reading of your existing workflow; it does not require a GitHub account
 or a successful remote run.
-|
+
 ### Bonus: GitHub Actions walkthrough 
 
 After the presentation, open your existing `.github/workflows/reproduce.yml`. Trace the locked environment setup, Ruff checks, unit tests, integration tests, and application command. Match each step to the local command in Ex 6. This shows how local checks can run on a hosted runner; it does not require a remote run. The workflow edit remains in Ex 6.
@@ -241,8 +241,7 @@ Choose one policy: reject input containing a negative quantity, or exclude inval
 before aggregation. Describe the reason and what a caller should observe. Decide what
 happens when all rows are invalid. Keep this decision distinct from Ex 2's refactor.
 
-1. Write the expected behavior in 
-otes/session-03.md`.
+1. Write the expected behavior in `notes/session-03.md`.
 2. Replace `test_negative_quantity_policy` with tests for that decision and normal orders.
    Show the failing result before changing production code.
 3. Implement the policy in `prepare_orders`. Run the completed data-processing tests:

@@ -29,7 +29,7 @@ Update your separate course checkout and inspect the [asset list](05_tracking/RE
 Do not initialize DVC inside the course checkout or the full reference project.
 Install and lock DVC and MLflow in **your exercise project**, then sync:
 
-```powershell
+```bash
 uv add "dvc==3.67.1" "mlflow==3.16.1"
 uv sync --locked
 uv run --locked dvc --version
@@ -40,10 +40,11 @@ git status --short
 
 Retain your existing HighRev pipeline dependencies and review the resulting
 lockfile; resolve dependencies before class while package access is available.
-Commands below use PowerShell from your exercise project root. Python, Git and
-`uv run` invocations are portable, but path creation and variable syntax differ
-in other shells. Do not run these commands in the course checkout. Run existing
-tests and fix a broken baseline before continuing.
+Commands below use Bash (Git Bash on Windows, as in earlier sessions) from your
+exercise project root. Do not run these commands in the course checkout. Run
+existing tests and fix a broken baseline before continuing. Shell variables such
+as `$exercise_root` last only for the current terminal; if you open a new one,
+set them again from the values you recorded.
 
 ## Puzzle pieces
 
@@ -91,7 +92,7 @@ Git project with the raw files present.
    existing work. If the raw files are tracked by Git, remove **only their Git
    index entries**, retaining local files:
 
-   ```powershell
+   ```bash
    git rm -r --cached -- data/01_raw
    ```
 
@@ -104,41 +105,74 @@ Git project with the raw files present.
    A broad rule prevents DVC creating its pointer; force-adding a pointer later
    cannot fix that initialization error. Track `data/01_raw`, inspect `data/01_raw.dvc` and the generated ignore rule:
 
-   ```powershell
+   ```bash
    uv run --locked dvc add data/01_raw
-   Get-Content data/01_raw.dvc
+   cat data/01_raw.dvc
    git status --short
    ```
 
    The pointer hash identifies the directory's data objects. It is not the
    same thing as a checksum for either individual CSV.
-3. Create a local remote outside this repository. The following PowerShell
-   paths put it next to your project. `--local` keeps the machine-specific path
-   in local DVC configuration; it must be set separately in another clone.
+3. Create a local remote outside this repository. The following commands put
+   it next to your project. `--local` keeps the machine-specific path in local
+   DVC configuration; it must be set separately in another clone. `pwd -W`
+   prints Git Bash's Windows form of a path (`D:/...`), which DVC and MLflow
+   expect on Windows; on Linux/macOS the plain `pwd` is used.
 
-   ```powershell
-   $ExerciseRoot = (Get-Location).Path
-   $DvcRemote = Join-Path (Split-Path $ExerciseRoot -Parent) 'highrev-dvc-remote'
-   New-Item -ItemType Directory -Force -Path $DvcRemote | Out-Null
-   uv run --locked dvc remote add --local -d lesson05 "$DvcRemote"
+   ```bash
+   native_path() { (cd "$1" && { pwd -W 2>/dev/null || pwd; }); }
+   exercise_root=$(native_path .)
+   mkdir -p ../highrev-dvc-remote
+   dvc_remote=$(native_path ../highrev-dvc-remote)
+   echo "$exercise_root" "$dvc_remote"
+   uv run --locked dvc remote add --local -d lesson05 "$dvc_remote"
    uv run --locked dvc push
    ```
 
    Stage and commit DVC's generated pointer and ignore changes, plus your
    dependency changes (substitute paths if your project differs):
 
-   ```powershell
+   ```bash
    git add -- .dvc .gitignore data/01_raw.dvc pyproject.toml uv.lock
-   if (Test-Path .dvcignore) { git add -- .dvcignore }
-   if (Test-Path data/.gitignore) { git add -- data/.gitignore }
+   if [[ -f .dvcignore ]]; then git add -- .dvcignore; fi
+   if [[ -f data/.gitignore ]]; then git add -- data/.gitignore; fi
    git status --short
    git diff --cached
    git commit -m "Track HighRev raw data V1"
-   $V1Commit = (git rev-parse HEAD).Trim()
+   v1_commit=$(git rev-parse HEAD)
+   echo "$v1_commit"
    ```
 
    The conditional commands include only ignore files that exist. Inspect staged changes: do not commit data bytes, local cache,
    local remote configuration or credentials. Record the V1 hash and commit.
+4. Keep `reproduce.yml` honest. The GitHub runner now checks out the pointer
+   but not the CSVs, and it cannot reach your local remote, so the Session 4
+   Kedro integration test and `python -m highrev` would fail there. The Session
+   3 workflow test builds its data from `tests/fixtures/` and still runs. In
+   `.github/workflows/reproduce.yml`, replace the last two steps
+   (`Integration tests` and `Train through the modules`) with:
+
+   ```yaml
+         - name: Integration tests that use committed fixtures
+           run: uv run --locked pytest tests/integration -q --ignore=tests/integration/test_kedro_pipeline.py
+         - name: Say which checks need the DVC-managed raw data
+           if: hashFiles('data/01_raw/orders.csv') == ''
+           run: echo "::warning::data/01_raw is managed by DVC and absent on this runner; the Kedro integration test and python -m highrev did not run here."
+         - name: Integration tests that need the raw data
+           if: hashFiles('data/01_raw/orders.csv') != ''
+           run: uv run --locked pytest tests/integration/test_kedro_pipeline.py -q
+         - name: Train through the modules
+           if: hashFiles('data/01_raw/orders.csv') != ''
+           run: uv run --locked python -m highrev
+   ```
+
+   Keep the indentation of the existing steps. Locally, where the data exist,
+   run the full set as before: `uv run --locked pytest tests/integration -q`
+   and `uv run --locked python -m highrev`. Commit the workflow with
+   `git commit -m "Keep reproduce green without raw data in Git" -- .github/workflows/reproduce.yml`.
+   `$v1_commit` stays the pointer commit recorded above. The warning is a
+   recorded gap, not a pass: Lab 07 restores approved data copies on the runner
+   so the full pipeline runs in CI again.
 
 **Check:** DVC reports the push completed, Git tracks the pointer rather than
 raw files, and the raw files remain usable. The pointer without retained remote
@@ -153,25 +187,26 @@ V1 committed and pushed.
    exercise repository into a new sibling path; do not clone into the project
    itself. The clone is disposable and its destination must not already exist.
 
-   ```powershell
+   ```bash
    git rev-parse HEAD
-   Get-FileHash data/01_raw/orders.csv, data/01_raw/customers.csv -Algorithm SHA256
-   $CloneRoot = Join-Path (Split-Path $ExerciseRoot -Parent) 'highrev-lesson05-clone'
-   git clone --no-local "$ExerciseRoot" "$CloneRoot"
-   Set-Location "$CloneRoot"
+   sha256sum data/01_raw/orders.csv data/01_raw/customers.csv
+   clone_root="$(dirname "$exercise_root")/highrev-lesson05-clone"
+   test ! -e "$clone_root" || echo "$clone_root already exists: choose another name"
+   git clone --no-local "$exercise_root" "$clone_root"
+   cd "$clone_root"
    ```
 2. In the clone, configure its own `lesson05` local remote pointing to the
-   same `$DvcRemote`, then pull:
+   same `$dvc_remote`, then pull:
 
-   ```powershell
+   ```bash
    uv sync --locked
-   uv run --locked dvc remote add --local -d lesson05 "$DvcRemote"
+   uv run --locked dvc remote add --local -d lesson05 "$dvc_remote"
    uv run --locked dvc pull
-   Get-FileHash data/01_raw/orders.csv, data/01_raw/customers.csv -Algorithm SHA256
+   sha256sum data/01_raw/orders.csv data/01_raw/customers.csv
    ```
 
    The clone's DVC cache is separate. Compare hashes and pointer with the
-   original. Return with `Set-Location "$ExerciseRoot"` for the next exercise.
+   original. Return with `cd "$exercise_root"` for the next exercise.
 
 **Check:** both files and hashes agree, and the pull succeeded in the fresh
 clone. This establishes local recovery from that remote, not an off-machine
@@ -187,7 +222,7 @@ committed to Git, the V1 objects must have been pushed to the configured DVC
 remote, `dvc status` must be clean, and `git status --short` must show no
 changes. Check the pointer explicitly:
 
-```powershell
+```bash
 git ls-files --error-unmatch data/01_raw.dvc
 uv run --locked dvc status
 git status --short
@@ -215,13 +250,13 @@ fix that cause before trying again.
    Record observations outside the repository until after B, or commit them
    before A. Verify `git status --short` and save the commit ID. Run A:
 
-   ```powershell
+   ```bash
    uv run --locked python -m highrev.track_run --name A-baseline
    ```
 
 4. Start the local UI in a separate terminal from the exercise root:
 
-   ```powershell
+   ```bash
    uv run --locked mlflow ui --backend-store-uri sqlite:///mlflow.db --workers 1
    ```
 
@@ -229,7 +264,7 @@ fix that cause before trying again.
    status, parameters, metrics, tags `git.commit` and `dvc.data_hash`, and the
    `classifier` model artifact. Use the supplied inspector with A's actual ID:
 
-   ```powershell
+   ```bash
    uv run --locked python tools/inspect_run.py --run-id "REPLACE_WITH_RUN_ID"
    ```
 
@@ -253,7 +288,7 @@ clean commit and V1 data still selected.
 
 1. Run B without changing code or the data and record its ID:
 
-   ```powershell
+   ```bash
    uv run --locked python -m highrev.track_run --name B-parameter --c 0.1
    ```
 
@@ -262,15 +297,15 @@ clean commit and V1 data still selected.
    settings. Only then record observations in your notes and commit the notes
    before C, so they do not make provenance ambiguous.
 2. Use the supplied `tools/make_v2.py` to remove every tenth order once; inspect
-   its repeat guard and the actual changed file. `$V1Commit` is the V1 commit
+   its repeat guard and the actual changed file. `$v1_commit` is the V1 commit
    saved in Ex 2; if you opened a new terminal, set it to that recorded commit.
    The helper rejects a mismatched pointer or dirty data, so it cannot silently
    apply the change twice. The customer table, column
    schema, split seed, target definition and base configuration remain fixed.
    Update the DVC pointer, push V2, commit the pointer, and run C:
 
-   ```powershell
-   uv run --locked python tools/make_v2.py --v1-ref $V1Commit
+   ```bash
+   uv run --locked python tools/make_v2.py --v1-ref "$v1_commit"
    uv run --locked dvc add data/01_raw
    uv run --locked dvc push
    git add data/01_raw.dvc
@@ -303,14 +338,14 @@ from a successful run. **Start:** A/B/C recorded, V1 and V2 pushed.
    objects first, then synchronize the environment and data. Replace the quoted
    value with A's actual `git.commit` tag:
 
-   ```powershell
-   Set-Location $CloneRoot
+   ```bash
+   cd "$clone_root"
    git status --short
    git fetch origin
    git switch --detach "REPLACE_WITH_A_GIT_COMMIT"
    uv sync --locked
    uv run --locked dvc pull data/01_raw.dvc
-   Get-FileHash data/01_raw/*.csv -Algorithm SHA256
+   sha256sum data/01_raw/*.csv
    uv run --locked python -m highrev.track_run --name A-reproduced
    ```
 
@@ -319,10 +354,10 @@ from a successful run. **Start:** A/B/C recorded, V1 and V2 pushed.
    there and compare with the original using `--tracking-uri` and
    `--compare-tracking-uri` when inspecting across stores:
 
-   ```powershell
-   Set-Location $ExerciseRoot
-   $CloneUri = "sqlite:///" + ((Join-Path $CloneRoot 'mlflow.db') -replace '\\', '/')
-   uv run --locked python tools/inspect_run.py --run-id "A_RUN_ID" --compare "REPRODUCED_RUN_ID" --compare-tracking-uri $CloneUri
+   ```bash
+   cd "$exercise_root"
+   clone_uri="sqlite:///$clone_root/mlflow.db"
+   uv run --locked python tools/inspect_run.py --run-id "A_RUN_ID" --compare "REPRODUCED_RUN_ID" --compare-tracking-uri "$clone_uri"
    ```
 
    The inspector reports `reproduction_matches` only when finished status,
@@ -333,18 +368,19 @@ from a successful run. **Start:** A/B/C recorded, V1 and V2 pushed.
    Unprotect the CSV so a linked workspace file cannot damage the DVC cache,
    append a deliberately invalid line, then invoke the adapter:
 
-   ```powershell
-   Set-Location $CloneRoot
+   ```bash
+   cd "$clone_root"
    uv run --locked dvc unprotect data/01_raw/orders.csv
-   Add-Content data/01_raw/orders.csv 'deliberate invalid row'
+   echo 'deliberate invalid row' >> data/01_raw/orders.csv
    uv run --locked python -m highrev.track_run --name deliberate-failure
    # Expected: nonzero exit and a printed run ID. Inspect that ID.
    uv run --locked python tools/inspect_run.py --run-id "FAILED_RUN_ID"
    # Only after confirming this deliberate edit is the sole data change:
    uv run --locked dvc checkout --force data/01_raw.dvc
    uv run --locked python -m highrev.track_run --name recovered
-   ``` Inspect
-   the corresponding run status and error; restore the input immediately with
+   ```
+
+   Inspect the corresponding run status and error; restore the input immediately with
    DVC and verify a subsequent normal run. An unrelated setup failure before
    the run starts does not prove failed-run tracking. Never remove the remote.
 3. Answer the three questions at the end of the checklist. Save your notes
@@ -364,7 +400,7 @@ exercise project at its latest committed state.
 | Symptom | First action |
 | --- | --- |
 | Git checkout refuses due to local changes | Save or commit your work; switch versions in the disposable clone. Do not discard work blindly. |
-| Windows DVC site-cache access denied | Set `$env:DVC_SITE_CACHE_DIR` to a writable sibling directory, then retry. This is separate from `.dvc/cache`. |
+| Windows DVC site-cache access denied | `export DVC_SITE_CACHE_DIR="$(dirname "$exercise_root")/dvc-site-cache"`, then retry. This is separate from `.dvc/cache`. |
 | DVC cannot find an object | Confirm the intended remote, that the version was pushed, and that the object still exists. A pointer alone cannot restore missing bytes. |
 | Data were edited after `dvc add` | Update the pointer and push, or restore the intended version; verify before running. |
 | No run appears in the UI | Check working directory, experiment name, and that UI and adapter use the same SQLite store. |

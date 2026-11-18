@@ -1,0 +1,7 @@
+{
+  "winner": "logistic_regression",
+  "positive_label": "benign (1)",
+  "test_roc_auc": 0.9950396825396824,
+  "test_accuracy_at_0_5": 0.9824561403508771,
+  "test_f1_benign_at_0_5": 0.9861111111111112
+}

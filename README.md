@@ -108,18 +108,18 @@ The full project this course builds is laid out below. The starter has the first
 |---|---|---|---|
 | `data/01_raw/*.csv` | yes, committed to Git | session 5 moves exercise-project inputs to DVC | data that only exists on one laptop |
 | `baseline.py` | yes, one script | session 3 splits it into `src/highrev/` | notebook code nobody can test |
-| `sessions/01_intro/`: notebook, `api.py`, `Dockerfile` on a toy regression | yes, as a preview of sessions 8 and 9 | the HighRev versions arrive in sessions 8 and 9 | a pickle only its author can call |
+| `sessions/01_intro/`: notebook, `api.py`, `Dockerfile` on a toy regression | yes, as a preview of sessions 7, 9 and 11 | the HighRev versions arrive in sessions 7, 9 and 11 | a pickle only its author can call |
 | `pyproject.toml`, `uv.lock`, `.python-version` | no | session 2 | `pip install` and hope |
 | `tests/unit`, `tests/integration`, ruff | no | session 3 | "nothing crashed, so it's fine" |
 | `conf/base/catalog.yml`, `parameters.yml`, Kedro pipelines | no | session 4 | hard-coded paths and constants |
 | `data/01_raw.dvc`, `.dvc/` | no | session 5 | 3 MB of CSV in every commit |
 | `src/highrev/track_run.py`, MLflow runs and provenance | no | session 5 | metrics printed to a terminal |
 | MLflow registry, champion alias, quality gate | no | session 6 | a model without a promotion decision |
-| AutoML protocol (PyCaret, AutoGluon) | no | session 7 | one hand-tuned model |
-| `src/highrev/serving/api.py`, `ui.py` | no | session 8 | a pickle and a Slack message |
+| AutoML with AutoGluon, `lab07/` environment and deployed API | no | sessions 6–7 | one hand-tuned model |
+| `src/highrev/monitoring/`, Evidently reports, retrain signal | no | session 8 | finding out from the business |
 | `Dockerfile`, `compose.yaml` | no | session 9 | "works on my machine" |
 | `.github/workflows/` | no | session 10 | manual testing before release |
-| `src/highrev/monitoring/`, Evidently reports, retrain signal | no | session 11 | finding out from the business |
+| One typed serving contract on the AutoGluon API | no | session 11 | a pickle and a Slack message |
 | `k8s/`, `kubeflow/` | no | session 12 | one server, one team |
 
 ## Syllabus
@@ -135,12 +135,12 @@ ungraded research and preparation for concepts discussed in class. Briefs appear
 | 3 | Modularization and tests | "A refactor changed predictions without an exception." | [brief](sessions/03-modularization-and-tests.md) |
 | 4 | Pipelines with Kedro | "Nobody knows which cells run in which order." | [brief](sessions/04-pipelines-with-kedro.md) |
 | 5 | Data versioning and experiment tracking | "Which data and settings produced this model?" | [brief](sessions/05-data-versioning-and-tracking.md) |
-| 6 | Model registry and promotion with MLflow | "Thirty-seven runs. Which one is in production?" | week 6 |
-| 7 | AutoML | "The best model is too slow and too large to serve." | week 7 |
-| 8 | Serving with FastAPI | "A backend engineer asks for the prediction contract." | week 8 |
+| 6 | AutoML, model registry and promotion with MLflow | "Thirty-seven runs. Which one is in production?" | [brief](sessions/06-automl-and-registry.md) |
+| 7 | AutoGluon to a deployed API | "The best model is too slow and too large to serve." | [brief](sessions/07-autogluon-to-render.md) |
+| 8 | Monitoring, drift and retraining | "Inputs drifted. Should we retrain?" | week 8 |
 | 9 | Docker | "The endpoint works locally, not on the host." | week 9 |
 | 10 | CI/CD with GitHub Actions | "A bad model passed unit tests and was deployed." | week 10 |
-| 11 | Monitoring and retraining | "Inputs drifted. Should we retrain?" | week 11 |
+| 11 | Serving with FastAPI | "A backend engineer asks for the prediction contract." | week 11 |
 | 12 | Kubernetes and Kubeflow | "Ten teams need isolated, repeatable training jobs." | week 12 |
 
 ## The Project and Grading

@@ -1,6 +1,7 @@
 """Portable JSON writer used by the Bash setup command."""
 import argparse
 import json
+import re
 import uuid
 from pathlib import Path
 
@@ -23,6 +24,12 @@ def main():
     for path in (project / "src", project / "uv.lock", project / "data/01_raw/customers.csv", project / "data/01_raw/orders.csv"):
         if not path.exists():
             raise FileNotFoundError(path)
+    if not re.fullmatch(r"[0-9a-f]{32}\.dir", args.data_hash):
+        raise SystemExit(f"data_hash must be one 32-character md5 ending in .dir, got {args.data_hash!r}")
+    pointer = project / "data/01_raw.dvc"
+    recorded = re.findall(r"^- md5: (\S+)$", pointer.read_text(encoding="utf-8"), re.MULTILINE) if pointer.is_file() else []
+    if recorded != [args.data_hash]:
+        raise SystemExit(f"data_hash {args.data_hash} does not match the md5 in {pointer}: {recorded}")
     run.mkdir(parents=True, exist_ok=False)
     config = {
         "solution_dir": str(lab), "worker_python": str(worker),

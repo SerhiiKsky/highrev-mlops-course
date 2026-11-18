@@ -23,9 +23,9 @@ fail until implemented and must enter test discovery at their stated exercise.
 | Ex 2 | [settings.py](starter/src/highrev/settings.py) | `src/highrev/settings.py` | Explicit base/local environments and soft merging of nested parameters. |
 | Ex 2 | [pipeline_registry.py](starter/src/highrev/pipeline_registry.py) | `src/highrev/pipeline_registry.py` | Ex 3 registration scaffold; extend with `comparison` in Ex 6. |
 | Ex 2 | [pipelines/__init__.py](starter/src/highrev/pipelines/__init__.py) | `src/highrev/pipelines/__init__.py` | Pipeline package marker. |
-| Ex 2 | [data_processing/__init__.py](starter/src/highrev/pipelines/data_processing/__init__.py) | `src/highrev/pipelines/data_processing/__init__.py` | Data-processing package export. |
+| Ex 2 | [data_processing/__init__.py](starter/src/highrev/pipelines/data_processing/__init__.py) | `src/highrev/pipelines/data_processing/__init__.py` | Data-processing package marker. |
 | Ex 2 | [data_processing/pipeline.py](starter/src/highrev/pipelines/data_processing/pipeline.py) | `src/highrev/pipelines/data_processing/pipeline.py` | Ex 3 wiring; Ex 4 validation and reporting. |
-| Ex 2 | [modeling/__init__.py](starter/src/highrev/pipelines/modeling/__init__.py) | `src/highrev/pipelines/modeling/__init__.py` | Modeling package export. |
+| Ex 2 | [modeling/__init__.py](starter/src/highrev/pipelines/modeling/__init__.py) | `src/highrev/pipelines/modeling/__init__.py` | Modeling package marker. |
 | Ex 2 | [modeling/pipeline.py](starter/src/highrev/pipelines/modeling/pipeline.py) | `src/highrev/pipelines/modeling/pipeline.py` | Ex 3 model-options wiring; Ex 6 shared split and reusable training/evaluation template. |
 | Ex 2 | [catalog.yml](starter/conf/base/catalog.yml) | `conf/base/catalog.yml` | Basic raw-input and persisted-output entries; add report and variant entries later. |
 | Ex 2 | [parameters.yml](starter/conf/base/parameters.yml) | `conf/base/parameters.yml` | Preparation/split defaults, default model options, and `models.low_c` / `models.high_c`. |
@@ -42,8 +42,10 @@ Calls without this argument must preserve Session 3 defaults and behavior.
 No replacement modeling implementation is supplied. The pipeline package lives
 alongside these existing modules.
 
-Use your tracked Session 3 CSVs; no raw data is supplied here. Create `conf/local/`,
-keep credentials ignored, and track base configuration. Keep generated artifacts
+Use your tracked Session 3 CSVs; no raw data is supplied here. Create `conf/local/`
+with a tracked `.gitkeep` marker (Kedro refuses to run when the directory is
+missing, as it would be in a clean clone), keep credentials ignored, and track
+base configuration. Keep generated artifacts
 ignored; raw inputs remain tracked until Session 5.
 
 ## Work added during the exercises
@@ -54,7 +56,7 @@ ignored; raw inputs remain tracked until Session 5.
 | Ex 2 — Bootstrap Kedro and the catalog | Merge metadata, install dependencies, inspect the catalog, and update the lock. |
 | Ex 3 — Wire functions and model options | Complete basic pipelines and registry; add default-compatible model options. |
 | Ex 4 — Validate inputs and report class balance | Implement/test both functions; route both preparation paths through validated outputs; persist the report. |
-| Ex 5 — Select and debug a pipeline | Observe selected-run success, missing memory/persisted inputs, and recovery. |
+| Ex 5 — Select and debug a pipeline | Observe selected-run success, missing memory/persisted inputs, and recovery; override the threshold once, expose a stale labeled artifact, and restore the default. |
 | Ex 6 — Reuse modeling with namespaces | Share one split and instantiate training/evaluation as `low_c` and `high_c`; register `comparison`. |
 | Ex 7 — Apply environment overrides | Create development configuration, inspect merging, and separate development model/metrics paths. |
 | Ex 8 — Test the assembled pipeline | Complete required isolated integration assertions and run the required suite. |
