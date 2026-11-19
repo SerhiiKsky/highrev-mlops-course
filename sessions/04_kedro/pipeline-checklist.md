@@ -77,7 +77,21 @@ Mark objects held in memory and proposed persisted boundaries.
 | Starting at `train_model` in a new process | | | |
 | Modeling with labeled Parquet unavailable | | | |
 | Modeling after restoring the labeled input | | | |
+| Full run with `--params=high_revenue_threshold=500` | | | |
+| Modeling only afterwards, without the override | | | |
+| Restored full run, then a fresh modeling process | | | |
 
+| Saved result | Folder | rows / positive / negative / positive_rate | ROC AUC / accuracy / F1 |
+|---|---|---|---|
+| Baseline, threshold 300 | `data/08_reporting/s04-baseline/` | | |
+| Threshold 500 override | `data/08_reporting/s04-threshold500/` | | |
+| Modeling only after the override (stale labels) | `data/08_reporting/metrics.json` | | |
+| Restored default | `data/08_reporting/s04-restored/` | | |
+
+- Code commit, data identity, parameters, versions and lock state when the baseline was saved:
+- Why threshold 500 changes the task (target definition, stratified split), not just the score:
+- Evidence that the YAML default stayed 300 (`grep` output):
+- Why the modeling-only run matched the threshold-500 metrics although the YAML says 300:
 - Inspection method: definitions, my diagram, or Kedro-Viz:
 - Safe rename/disposable-copy method and confirmation of restored state:
 - Why selection does not recreate all omitted upstream nodes:

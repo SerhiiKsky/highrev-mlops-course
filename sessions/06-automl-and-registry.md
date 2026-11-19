@@ -36,6 +36,26 @@ if ! "$worker_python" -m unittest discover -s "$lab/tests" -v; then
 fi
 ```
 
+The supplied lab code is not written to your Session 3 Ruff settings, so your pre-commit hook would reject it. Keep it out of the project's lint gate, and keep the worker environment and PyCaret's log file out of Git. In `pyproject.toml`, extend the existing `[tool.ruff]` table (keep entries you already have, such as `"intro"`); `force-exclude` makes Ruff honour the exclusion when pre-commit passes file names explicitly:
+
+```toml
+[tool.ruff]
+extend-exclude = ["intro", "lab06", "lab07"]
+force-exclude = true
+```
+
+Then append the ignore rules and confirm that the lint gate and ignore rules behave:
+
+```bash
+cd "$project"
+printf '\n# Lab 06/07 local state\nlab06/worker-env/.venv/\nlab06/logs.log\nlab07/.venv/\n' >> .gitignore
+uv run --locked ruff check . && uv run --locked ruff format --check .
+uv run --locked ruff check lab06/new_config.py   # expected: "No Python files found" warning, exit 0
+git check-ignore -v lab06/worker-env/.venv lab06/logs.log
+```
+
+`lab07` is listed now so Lab 07 needs no second change. Your own `learning_tasks.py` code is excluded too; keep it readable and covered by the Lab 06 tests.
+
 The initial three `NotImplementedError` results are intentional. Implement `comparison_options` and `log_validation_metrics` in `lab06/lab06_worker/learning_tasks.py`, and `gate_reasons` in `lab06/src/highrev/lab06/learning_tasks.py`. Read their docstrings and the tests. For PyCaret, the budget is in minutes; `sort='AUC'`, `n_select=1`, and `errors='raise'` make the selection explicit. Log the supplied metrics with MLflow. The gate must check absolute AUC, permitted regression against an existing champion, model size, and p95 latency. Rerun the test command until all three tests pass, and add your own boundary test. These tests do not establish that the whole workflow works.
 
 ## L06-E1 - Define the prediction contract

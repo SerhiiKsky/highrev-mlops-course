@@ -43,6 +43,8 @@ uv run --locked python -m pytest tests -q
 
 One prediction test should initially fail because the API has a student TODO. Other results are not automatically acceptable: read unexpected failures. Keep and commit the supplied `uv.lock`; training and serving use it and the same Linux Python 3.11 image. This lock has been used to build the instructor's Linux training image; a fresh student installation remains to be rehearsed. If installation fails, keep the error and use the instructor fallback; do not change the Lab 05 environment to work around it.
 
+The supplied `lab07` code, like Lab 06's, is not written to your Session 3 Ruff settings. Lab 06 preparation already added `"lab07"` to `extend-exclude` (with `force-exclude = true`) and `lab07/.venv/` to `.gitignore`; check both with `grep -n -A2 'extend-exclude' pyproject.toml` and `git check-ignore -v lab07/.venv` before your first Lab 07 commit, and add them now if they are missing.
+
 ## Concepts
 
 For an optional standalone introduction before this applied exercise, see the
@@ -202,6 +204,6 @@ Free Render web services have limited memory and CPU, sleep when idle, and have 
 - [ ] I identified the source revision, model version and how the release is blocked when checks fail.
 - [ ] I recorded a live Render result or the exact blocker and local fallback.
 
-Keep your work in your individual exercise repository. Next, improve the serving contract, deployment tests and promotion relationship; future labs can deepen Docker, CI/CD and monitoring. Optional individual research: investigate an input-schema change, memory exhaustion, a failed check, and model drift. Explain which are visible to deployment checks and which need monitoring.
+Keep your work in your individual exercise repository. Next, Lab 08 watches this model for data and prediction drift: it adds Evidently to the project environment and compares new data with the data the model was trained on. The serving contract, deployment tests and promotion relationship return in later labs. Optional individual research: investigate an input-schema change, memory exhaustion, a failed check, and model drift. Explain which are visible to deployment checks and which need monitoring.
 
 References: [AutoGluon deployment](https://auto.gluon.ai/stable/tutorials/tabular/advanced/tabular-deployment.html), [Render image deployment](https://render.com/docs/deploying-an-image), [Render deploy hooks](https://render.com/docs/deploy-hooks), [Render free-service limits](https://render.com/docs/free), [GitHub image publishing](https://docs.github.com/en/actions/tutorials/publish-packages/publish-docker-images).
