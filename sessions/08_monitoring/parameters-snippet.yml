@@ -1,0 +1,21 @@
+# Lab 08: append this block unchanged to conf/base/parameters.yml.
+# Every monitoring number lives here, not in code. In L08-E2 you change one
+# drift_threshold from your own evidence and record the reason in
+# notes/session-08.md.
+monitoring:
+  batch_rows: 500          # rows per daily serving batch
+  days: 10                 # days per simulated stream
+  incident_start_day: 6    # first day the incident applies
+  seed: 7                  # same seed, same stream
+  drift_threshold:         # Evidently distance per column; a larger value means more drift
+    pages_visited: 0.1
+    age_first_order: 0.1
+    gender: 0.1
+    campaign: 0.1
+    ip_address_country: 0.1
+    browser: 0.1
+    os: 0.1
+  open_domain_columns:     # new values are expected here: reported, not a schema break
+    - ip_address_country
+  roc_auc_floor: 0.65      # the business's minimum acceptable ROC AUC (hard test)
+  parametric_k: 2.0        # standard deviations below the historical mean (parametric test)
