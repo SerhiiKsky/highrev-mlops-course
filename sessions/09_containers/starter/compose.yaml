@@ -1,0 +1,109 @@
+# The HighRev system in containers. Two long-running services and two job runners:
+#
+#   mlflow  tracking server (project image); runs and artifacts in volume "mlflow"
+#   api     live prediction service (AutoGluon image); model and pointer in ./serving
+#   project one-off project-environment jobs     (profile "jobs")
+#   ag      one-off AutoGluon-environment jobs   (profile "jobs")
+#
+#   docker compose build                         # before class: both images
+#   docker compose up -d mlflow api              # the platform
+#   bash scripts/cycle.sh none                   # one Lab 08 monitoring window in containers
+#
+# Loopback ports only: MLflow UI http://127.0.0.1:5000, API http://127.0.0.1:8007.
+
+name: highrev
+
+x-project-image: &project-image
+  image: ${PROJECT_IMAGE:-highrev-project:local}
+  build:
+    context: .
+    dockerfile: docker/project.Dockerfile
+
+x-autogluon-image: &autogluon-image
+  image: ${AUTOGLUON_IMAGE:-highrev-autogluon:local}
+  build:
+    context: .
+    dockerfile: docker/autogluon.Dockerfile
+    args:
+      SOURCE_REVISION: ${SOURCE_REVISION:-local}
+
+x-job-environment: &job-environment
+  MLFLOW_TRACKING_URI: http://mlflow:5000
+  # Fail at once when the tracking server cannot be reached (the default retries
+  # for several minutes before reporting the error).
+  MLFLOW_HTTP_REQUEST_MAX_RETRIES: "0"
+  API_URL: http://api:10000
+  SERVING_DIR: /serving
+  GIT_PYTHON_REFRESH: quiet
+  COLUMNS: "160"
+
+services:
+  mlflow:
+    <<: *project-image
+    user: "10001:10001"
+    command:
+      - mlflow
+      - server
+      - --backend-store-uri=sqlite:////mlflow/mlflow.db
+      - --artifacts-destination=/mlflow/artifacts
+      - --serve-artifacts
+      - --host=0.0.0.0
+      - --port=5000
+      - --workers=1
+      - --allowed-hosts=mlflow,mlflow:5000,localhost,localhost:5000,127.0.0.1,127.0.0.1:5000
+    volumes:
+      - mlflow:/mlflow
+    ports:
+      - "127.0.0.1:5000:5000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+  api:
+    <<: *autogluon-image
+    environment:
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-local-admin-token}
+      SERVING_DIR: /serving
+    volumes:
+      - ./servng:/serving
+    ports:
+      - "127.0.0.1:8007:10000"
+    mem_limit: 2g
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:10000/health', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  project:
+    <<: *project-image
+    profiles: [jobs]
+    working_dir: /workspace
+    environment: *job-environment
+    volumes:
+      - .:/workspace
+      - ./serving:/serving
+    depends_on:
+      mlflow:
+        condition: service_healthy
+
+  ag:
+    <<: *autogluon-image
+    profiles: [jobs]
+    user: "0:0"
+    working_dir: /workspace/lab07
+    environment: *job-environment
+    volumes:
+      - .:/workspace
+      - ./serving:/serving:ro
+    mem_limit: 4g
+    command: ["python", "-c", "print('give a command, e.g. python -m lab07.score_batches --help')"]
+
+volumes:
+  mlflow:

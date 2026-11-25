@@ -1,0 +1,10 @@
+# Build context for docker/*.Dockerfile is the project root: send only the lock files
+# and the serving code. Data, environments, runs and models never enter an image.
+*
+!pyproject.toml
+!uv.lock
+!.python-version
+!lab07/pyproject.toml
+!lab07/uv.lock
+!lab07/lab07/
+**/__pycache__
