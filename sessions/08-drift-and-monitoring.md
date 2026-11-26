@@ -462,8 +462,9 @@ Work through the [checklist](08_monitoring/checklist.md). Your project now has a
 monitoring package with tests, a scorer in the AutoGluon environment, monitoring
 parameters with your thresholds and floor, and a written retraining rule. Next,
 Lab 09 runs the API and its dependencies in containers; Lab 10 puts the quality
-gate and monitoring checks into CI and registers AutoGluon versions. Keep your
-streams if you want to compare them later; nothing later depends on them.
+gate and monitoring checks into CI and registers AutoGluon versions. Keep
+`data/08_reporting/monitoring/none/scores.csv`: Lab 09 compares its containerized
+scores with it. The other streams are yours to keep or delete.
 
 Optional individual practice: run `category`, `new_category` and `corrupt`, and
 explain why `corrupt`, which changes features while the labels stay fixed, also
